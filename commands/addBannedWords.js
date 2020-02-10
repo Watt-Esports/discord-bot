@@ -5,7 +5,7 @@ module.exports = {
 	name: 'banword',
 	description: 'Adds a word to the banned word list',
 	guildOnly: true,
-	modOnly: true,
+	adminOnly: true,
 	usage: 'banword <wordToAdd>',
 	execute(message, args) {
 		const {adminLogging} = message.client.config.channelIDs;

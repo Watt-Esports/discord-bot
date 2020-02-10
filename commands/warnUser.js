@@ -7,6 +7,7 @@ module.exports = {
 	name: 'warn',
 	description: 'Creates a wanring for the mentioned user with a reason',
 	guildOnly: true,
+	adminOnly: true,
 	modOnly: true,
 	usage: 'warn <user> <reason>',
 	execute(message, args) {

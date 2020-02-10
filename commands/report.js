@@ -6,6 +6,7 @@ module.exports = {
 	name: 'report',
 	description: 'Reports a mentioned user with a reason',
 	usage: 'report <user> <reason>',
+	helpMsg: true,
 	execute(message, args) {
 		const user = message.mentions.users.first();
 		const reason = args.join(' ').slice('22');

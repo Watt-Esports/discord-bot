@@ -19,7 +19,7 @@ module.exports = (client, message) => {
 
 	for (const bannedWord of bannedWords) {
 		if (message.content.includes(bannedWord) && !message.author.bot) {
-			if (message.content.startsWith('!unbanword') && message.member.roles.has(roleIDs.mod)) {
+			if (message.content.startsWith('!unbanword') && message.member.roles.has(roleIDs.admin)) {
 				break;
 			}
 
@@ -49,7 +49,9 @@ module.exports = (client, message) => {
 	try {
 		if (command.guildOnly && message.channel.type !== 'text') {
 			message.reply('I can\'t execute that command inside DMs!');
-		} else if (command.modOnly && !message.member.roles.has(roleIDs.mod)) {
+		} else if (command.adminOnly && !message.member.roles.has(roleIDs.admin)) {
+			return;
+		} else if (command.modOnly && ![`${roleIDs.discOfficer}, ${roleIDs.comLead}`].includes(message.member.roles)) {
 			return;
 		} else {
 			command.execute(message, args);

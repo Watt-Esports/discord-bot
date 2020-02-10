@@ -8,6 +8,7 @@ module.exports = {
 	name: 'mute',
 	description: 'Mutes a mentioned user with a given reason',
 	guildOnly: true,
+	adminOnly: true,
 	modOnly: true,
 	usage: 'mute <user> <reason>',
 	execute(message, args) {

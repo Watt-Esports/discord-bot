@@ -5,6 +5,7 @@ module.exports = {
 	name: 'pepe',
 	description: 'Posts a random pepe',
 	usage: 'pepe',
+	helpMsg: true,
 	execute(message) {
 		const randomPepe = pepeDatabase[Math.floor(Math.random() * pepeDatabase.length)];
 		const pngPepe = randomPepe.slice(0, -1) + '.png';
