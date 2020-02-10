@@ -1,7 +1,6 @@
 const moment = require('moment');
 const {RichEmbed} = require('discord.js');
 const {bannedWords} = require('../utils/profanities.json');
-const {mutedUsers} = require('../utils/muted.json');
 const {getDiscordId} = require('../utils/functions.js');
 
 module.exports = (client, message) => {
@@ -9,13 +8,6 @@ module.exports = (client, message) => {
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
 	const command = client.commands.get(commandName);
-
-	for (const mutedUser of mutedUsers) {
-		if (message.author.id === mutedUser) {
-			message.delete();
-			break;
-		}
-	}
 
 	for (const bannedWord of bannedWords) {
 		if (message.content.includes(bannedWord) && !message.author.bot) {
@@ -51,7 +43,7 @@ module.exports = (client, message) => {
 			message.reply('I can\'t execute that command inside DMs!');
 		} else if (command.adminOnly && !message.member.roles.has(roleIDs.admin)) {
 			return;
-		} else if (command.modOnly && ![`${roleIDs.discOfficer}, ${roleIDs.comLead}`].includes(message.member.roles)) {
+		} else if (command.modOnly && !(message.member.roles.has(roleIDs.admin) || message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) {
 			return;
 		} else {
 			command.execute(message, args);

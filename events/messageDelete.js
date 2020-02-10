@@ -1,6 +1,5 @@
 const moment = require('moment');
 const {RichEmbed} = require('discord.js');
-const {mutedUsers} = require('../utils/muted.json');
 const {bannedWords} = require('../utils/profanities.json');
 const {getDiscordId} = require('../utils/functions.js');
 
@@ -16,13 +15,6 @@ module.exports = (client, deletedMessage) => {
 		.addField('Location', `${deletedMessage.channel}`)
 		.addField('Message', `${deletedMessageContent}`)
 		.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
-
-	// Prevents logging muting users messages
-	for (const mutedUser of mutedUsers) {
-		if (user.id === mutedUser) {
-			return;
-		}
-	}
 
 	// Prevents double logging when banned word used
 	for (const word of bannedWords) {
