@@ -1,7 +1,5 @@
-const mutedUsersList = require('../utils/muted.json');
 const moment = require('moment');
 const {RichEmbed} = require('discord.js');
-const {writeFile} = require('fs');
 const {getDiscordId} = require('../utils/functions.js');
 
 module.exports = {
@@ -12,17 +10,17 @@ module.exports = {
 	modOnly: true,
 	usage: 'mute <user> <reason>',
 	execute(message, args) {
-		const {adminLogging} = message.client.config.channelIDs;
+		const {channelIDs, roleIDs} = message.client.config;
 		const memberToMute = message.mentions.members.first();
-		const reason = args.join(' ').slice('22');
+		const length = args[1];
 
 		if (!memberToMute) {
 			message.channel.send('Please mention a user to mute!');
 			return;
 		}
 
-		if (!reason) {
-			message.channel.send('Please include a reason');
+		if (!length) {
+			message.channel.send('Please specify a time for the mute in minutes');
 			return;
 		}
 		const muteEmbed = new RichEmbed()
@@ -30,17 +28,22 @@ module.exports = {
 			.setTitle('User Muted')
 			.setColor('#FF0000')
 			.addField('Muted by', `${message.author}`)
-			.addField('Reason', `${reason}`)
+			.addField('Length', `${length} minute(s)`)
 			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
 
-		mutedUsersList.mutedUsers.push(memberToMute.id);
-		writeFile('utils/muted.json', JSON.stringify(mutedUsersList), (err) => {
-			if (err) {
-				throw err;
-			}
+		const muteExpired = new RichEmbed()
+			.setAuthor(getDiscordId(memberToMute.user), memberToMute.user.avatarURL)
+			.setTitle('User Mute Expired')
+			.setColor('#FF0000')
+			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
 
-			message.react('✅');
-			message.client.channels.get(adminLogging).send(muteEmbed);
-		});
+		memberToMute.addRole(roleIDs.muted);
+		setTimeout(() => {
+			memberToMute.removeRole(roleIDs.muted);
+			message.client.channels.get(channelIDs.adminLogging).send(muteExpired);
+		}, length * 60000);
+
+		message.react('✅');
+		message.client.channels.get(channelIDs.adminLogging).send(muteEmbed);
 	}
 };

@@ -51,7 +51,7 @@ module.exports = (client, message) => {
 			message.reply('I can\'t execute that command inside DMs!');
 		} else if (command.adminOnly && !message.member.roles.has(roleIDs.admin)) {
 			return;
-		} else if (command.modOnly && ![`${roleIDs.discOfficer}, ${roleIDs.comLead}`].includes(message.member.roles)) {
+		} else if (command.modOnly && !(message.member.roles.has(roleIDs.admin) || message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) {
 			return;
 		} else {
 			command.execute(message, args);
