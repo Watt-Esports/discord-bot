@@ -1,6 +1,4 @@
 const moment = require('moment');
-const mutedUserList = require('../utils/muted.json');
-const {writeFile} = require('fs');
 const {RichEmbed} = require('discord.js');
 const {getDiscordId} = require('../utils/functions.js');
 
@@ -12,16 +10,11 @@ module.exports = {
 	modOnly: true,
 	usage: 'unmute <user>',
 	execute(message) {
-		const {adminLogging} = message.client.config.channelIDs;
+		const {channelIDs, roleIDs} = message.client.config;
 		const memberToUnmute = message.mentions.members.first();
 
 		if (!memberToUnmute) {
 			message.channel.send('Please mention a user to unmute!');
-			return;
-		}
-
-		if (!mutedUserList.mutedUsers.includes(memberToUnmute.id.toString())) {
-			message.channel.send('User is not muted!');
 			return;
 		}
 
@@ -32,20 +25,8 @@ module.exports = {
 			.addField('Unmuted By', `${message.author}`)
 			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
 
-		for (const [index, userId] of mutedUserList.mutedUsers.entries()) {
-			if (userId === memberToUnmute.id) {
-				mutedUserList.mutedUsers.splice(index, 1);
-				break;
-			}
-		}
-
-		writeFile('utils/muted.json', JSON.stringify(mutedUserList), (err) => {
-			if (err) {
-				throw err;
-			}
-
-			message.react('✅');
-			message.client.channels.get(adminLogging).send(unmuteEmbed);
-		});
+		memberToUnmute.removeRole(roleIDs.muted);
+		message.react('✅');
+		message.client.channels.get(channelIDs.adminLogging).send(unmuteEmbed);
 	}
 };

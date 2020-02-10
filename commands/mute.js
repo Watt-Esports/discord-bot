@@ -23,6 +23,11 @@ module.exports = {
 			message.channel.send('Please specify a time for the mute in minutes');
 			return;
 		}
+
+		if (memberToMute.roles.has(roleIDs.muted)) {
+			message.channel.send('User is already muted');
+			return;
+		}
 		const muteEmbed = new RichEmbed()
 			.setAuthor(getDiscordId(memberToMute.user), memberToMute.user.avatarURL)
 			.setTitle('User Muted')
