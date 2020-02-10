@@ -4,7 +4,7 @@ module.exports = {
 	name: 'removewarn',
 	description: 'Removes a warning or all warning for a mentioned user',
 	guildOnly: true,
-	modOnly: true,
+	adminOnly: true,
 	usage: 'removewarn <user> <warnID>',
 	execute(message, args) {
 		const {spreadsheetID, spreadsheetConfig} = message.client.config;

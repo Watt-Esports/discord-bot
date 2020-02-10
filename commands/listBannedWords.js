@@ -4,6 +4,7 @@ module.exports = {
 	name: 'listbanwords',
 	description: 'Lists out the banned words in the server',
 	guildOnly: true,
+	adminOnly: true,
 	modOnly: true,
 	usage: 'listbanwords',
 	execute(message) {

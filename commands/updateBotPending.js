@@ -5,7 +5,8 @@ module.exports = {
 	name: 'update',
 	description: 'Updates Society Member list',
 	guildOnly: true,
-	modOnly: true,
+	adminOnly: true,
+	modOnly: false,
 	usage: 'update',
 	execute(message) {
 		const {guildID, roleIDs, spreadsheetID, spreadsheetConfig} = message.client.config;
@@ -32,6 +33,7 @@ module.exports = {
 							}
 						}
 					}
+					message.react('✅');
 				});
 			});
 		});

@@ -5,6 +5,7 @@ module.exports = {
 	description: 'Lists all commands, usage and description',
 	usage: 'help',
 	guildOnly: true,
+	helpMsg: true,
 	execute(message) {
 		const {commands, config} = message.client;
 		const {prefix, roleIDs} = config;
@@ -18,15 +19,18 @@ module.exports = {
 			.setFooter('owo what\'s this');
 
 		for (const command of commands.values()) {
-			if (command.modOnly && message.member.roles.has(roleIDs.mod)) {
+			if (command.adminOnly && message.member.roles.has(roleIDs.admin)) {
 				adminEmbed.addField(`\`${prefix}${command.usage}\``, `${command.description}`);
-			} else {
+			} else if (command.modOnly && (message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) {
+				console.log([`${roleIDs.discOfficer}, ${roleIDs.comLead}`].includes(message.member.roles));
+				adminEmbed.addField(`\`${prefix}${command.usage}\``, `${command.description}`);
+			} else if (command.helpMsg) {
 				helpEmbed.addField(`\`${prefix}${command.usage}\``, `${command.description}`);
 			}
 		}
 
 		message.author.send(helpEmbed);
-		if (message.member.roles.has(roleIDs.mod)) {
+		if (message.member.roles.has(roleIDs.admin) || message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead)) {
 			message.author.send(adminEmbed);
 		}
 

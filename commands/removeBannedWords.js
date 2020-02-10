@@ -5,7 +5,7 @@ module.exports = {
 	name: 'unbanword',
 	description: 'Removes a banned word from the list',
 	guildOnly: true,
-	modOnly: true,
+	adminOnly: true,
 	usage: 'unbanword <wordToRemove>',
 	execute(message, args) {
 		const {adminLogging} = message.client.config.channelIDs;

@@ -4,6 +4,7 @@ module.exports = {
 	name: 'member',
 	description: 'Verifies that you have paid for the society member role',
 	guildOnly: true,
+	helpMsg: true,
 	usage: 'member <MatriculationNumber>',
 	execute(message, args) {
 		const member = message.member;

@@ -82,3 +82,4 @@ If the event already exists, you can do into the corresponding file and add the 
 }
 ```
 
+*If you want to help with the development of this, message Nightwing#2603 on discord*

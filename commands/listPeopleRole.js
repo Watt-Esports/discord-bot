@@ -3,6 +3,7 @@ module.exports = {
 	description: 'Lists all the members that have a certain role',
 	usage: 'members <rolename>',
 	guildOnly: true,
+	adminOnly: true,
 	modOnly: true,
 	execute(message, args) {
 		const {adminLogging} = message.client.config.channelIDs;

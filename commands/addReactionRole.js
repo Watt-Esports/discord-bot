@@ -5,20 +5,17 @@ module.exports = {
 	name: 'addrole',
 	description: 'Links a reaction to a role on a certain message',
 	guildOnly: true,
+	adminOnly: true,
 	modOnly: true,
 	usage: 'addrole <emote> <rolename> <messageID>',
 	execute(message, args) {
-		const {roleIDs, guildID, channelIDs} = message.client.config;
+		const {guildID, channelIDs} = message.client.config;
 		const guildObj = message.client.guilds.get(guildID);
 		const getRoleChannel = guildObj.channels.get(channelIDs.getRole);
 		const emojiNameRaw = args[0];
 		const roleName = args[1];
 		const messageID = args[2];
 		let messageIDExists = false;
-
-		if (message.member.roles.has(roleIDs.modRole)) {
-			return;
-		}
 
 		if (!emojiNameRaw || !roleName || !messageID) {
 			message.channel.send('Oops! Try again with `addrole <emoji> <roleName> <messageID>`');
