@@ -22,7 +22,6 @@ module.exports = {
 			if (command.adminOnly && message.member.roles.has(roleIDs.admin)) {
 				adminEmbed.addField(`\`${prefix}${command.usage}\``, `${command.description}`);
 			} else if (command.modOnly && (message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) {
-				console.log([`${roleIDs.discOfficer}, ${roleIDs.comLead}`].includes(message.member.roles));
 				adminEmbed.addField(`\`${prefix}${command.usage}\``, `${command.description}`);
 			} else if (command.helpMsg) {
 				helpEmbed.addField(`\`${prefix}${command.usage}\``, `${command.description}`);
