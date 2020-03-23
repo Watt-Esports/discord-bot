@@ -28,5 +28,10 @@ module.exports = (client, deletedMessage) => {
 		return;
 	}
 
+	// Prevents logging of HW IDs when posted for verification
+	if (deletedMessageContent.startsWith('!member')) {
+		return;
+	}
+
 	client.channels.get(adminLogging).send(deleteEmbed);
 };
