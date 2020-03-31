@@ -1,6 +1,4 @@
-const moment = require('moment');
-const {RichEmbed} = require('discord.js');
-const {getDiscordId} = require('../utils/functions.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = (client, oldMessage, newMessage) => {
 	const {adminLogging} = client.config.channelIDs;
@@ -8,13 +6,11 @@ module.exports = (client, oldMessage, newMessage) => {
 
 	if (oldMessage.content === newMessage.content) return;
 	if (!oldMessage.partial) {
-		const editEmbed = new RichEmbed()
-			.setAuthor(getDiscordId(user), user.avatarURL)
+		const editEmbed = createRichEmbed(user)
 			.setColor('#0098DB')
 			.addField('Message Edit', `[Jump to Message](https://discordapp.com/channels/${newMessage.guild.id}/${newMessage.channel.id}/${newMessage.id})`)
 			.addField('Before', `${oldMessage.content}`)
-			.addField('After', `${newMessage.content}`)
-			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+			.addField('After', `${newMessage.content}`);
 
 		client.channels.get(adminLogging).send(editEmbed).catch(console.error);
 	}

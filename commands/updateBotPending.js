@@ -1,5 +1,5 @@
 const {GoogleSpreadsheet} = require('google-spreadsheet');
-const {getDiscordId} = require('../utils/functions.js');
+const {getDiscordId} = require('../utils/getDiscordID.js');
 
 module.exports = {
 	name: 'update',

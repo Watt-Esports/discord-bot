@@ -1,6 +1,4 @@
-const moment = require('moment');
-const {RichEmbed} = require('discord.js');
-const {getDiscordId} = require('../utils/functions.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = {
 	name: 'unmute',
@@ -18,12 +16,10 @@ module.exports = {
 			return;
 		}
 
-		const unmuteEmbed = new RichEmbed()
-			.setAuthor(getDiscordId(memberToUnmute.user), memberToUnmute.user.avatarURL)
+		const unmuteEmbed = createRichEmbed(memberToUnmute.user)
 			.setTitle('User Unmute')
-			.setColor('#00FF00')
-			.addField('Unmuted By', `${message.author}`)
-			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+			.setColor('#FFA500')
+			.addField('Unmuted By', `${message.author}`);
 
 		memberToUnmute.removeRole(roleIDs.muted);
 		message.react('✅');

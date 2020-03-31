@@ -1,7 +1,5 @@
-const moment = require('moment');
-const {RichEmbed} = require('discord.js');
 const {bannedWords} = require('../utils/profanities.json');
-const {getDiscordId} = require('../utils/functions.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = (client, message) => {
 	const {prefix, channelIDs, roleIDs} = client.config;
@@ -17,13 +15,11 @@ module.exports = (client, message) => {
 
 			message.delete();
 
-			const bannedWordUseEmbed = new RichEmbed()
-				.setAuthor(getDiscordId(message.author), message.author.avatarURL)
+			const bannedWordUseEmbed = createRichEmbed(message.author)
 				.setTitle('Banned word used UwU')
 				.setColor('#FF0000')
 				.addField('Location', `${message.channel}`)
-				.addField('Message', `${message.content}`)
-				.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+				.addField('Message', `${message.content}`);
 
 			client.channels.get(channelIDs.adminLogging).send(bannedWordUseEmbed);
 			break;

@@ -1,7 +1,5 @@
-const moment = require('moment');
-const {RichEmbed} = require('discord.js');
 const {bannedWords} = require('../utils/profanities.json');
-const {getDiscordId} = require('../utils/functions.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = async (client, deletedMessage) => {
 	const {adminLogging} = client.config.channelIDs;
@@ -18,14 +16,12 @@ module.exports = async (client, deletedMessage) => {
 		deletedBy = executor;
 	}
 
-	const deleteEmbed = new RichEmbed()
-		.setAuthor(getDiscordId(user), user.avatarURL)
+	const deleteEmbed = createRichEmbed(user)
 		.setTitle('Message delete')
 		.setColor('#0098DB')
 		.addField('Location', `${deletedMessage.channel}`)
 		.addField('Message', `${deletedMessageContent ? deletedMessageContent : 'Image Message'}`)
-		.addField('Deleted By', `${deletedBy}`)
-		.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+		.addField('Deleted By', `${deletedBy}`);
 
 	// Prevents double logging when banned word used
 	for (const word of bannedWords) {

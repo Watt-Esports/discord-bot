@@ -1,15 +1,11 @@
-const moment = require('moment');
-const {RichEmbed} = require('discord.js');
-const {getDiscordId} = require('../utils/functions.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = (client, member) => {
 	const {adminLogging} = client.config.channelIDs;
 	const {user} = member;
-	const leaveEmbed = new RichEmbed()
-		.setAuthor(getDiscordId(user), user.avatarURL)
+	const leaveEmbed = createRichEmbed(user)
 		.setColor('#0098DB')
-		.setTitle('RIP User left discord')
-		.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+		.setTitle('RIP User left discord');
 
 	client.channels.get(adminLogging).send(leaveEmbed);
 };

@@ -1,6 +1,4 @@
-const moment = require('moment');
-const {RichEmbed} = require('discord.js');
-const {getDiscordId} = require('../utils/functions.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = {
 	name: 'mute',
@@ -28,24 +26,22 @@ module.exports = {
 			message.channel.send('User is already muted');
 			return;
 		}
-		const muteEmbed = new RichEmbed()
-			.setAuthor(getDiscordId(memberToMute.user), memberToMute.user.avatarURL)
+		const muteEmbed = createRichEmbed(memberToMute.user)
 			.setTitle('User Muted')
 			.setColor('#FF0000')
 			.addField('Muted by', `${message.author}`)
-			.addField('Length', `${length} minute(s)`)
-			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+			.addField('Length', `${length} minute(s)`);
 
-		const muteExpired = new RichEmbed()
-			.setAuthor(getDiscordId(memberToMute.user), memberToMute.user.avatarURL)
+		const muteExpired = createRichEmbed(memberToMute.user)
 			.setTitle('User Mute Expired')
-			.setColor('#FF0000')
-			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+			.setColor('#FFA500');
 
 		memberToMute.addRole(roleIDs.muted);
 		setTimeout(() => {
-			memberToMute.removeRole(roleIDs.muted);
-			message.client.channels.get(channelIDs.adminLogging).send(muteExpired);
+			if (memberToMute.roles.has(roleIDs.muted)) {
+				memberToMute.removeRole(roleIDs.muted);
+				message.client.channels.get(channelIDs.adminLogging).send(muteExpired);
+			}
 		}, length * 60000);
 
 		message.react('✅');
