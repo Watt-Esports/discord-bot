@@ -1,7 +1,6 @@
-const {GoogleSpreadsheet} = require('google-spreadsheet');
 const moment = require('moment');
-const {RichEmbed} = require('discord.js');
-const {getDiscordId} = require('../utils/functions.js');
+const {GoogleSpreadsheet} = require('google-spreadsheet');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = {
 	name: 'warn',
@@ -67,13 +66,11 @@ module.exports = {
 
 		await warningSheet.addRow(rowToAdd);
 
-		const warnEmbed = new RichEmbed()
-			.setAuthor(getDiscordId(user), user.avatarURL)
+		const warnEmbed = createRichEmbed(user)
 			.setTitle('Warning Issued')
 			.setColor('#FF0000')
 			.addField('Moderator', `${message.author}`, true)
-			.addField('Reason', `${reason}`, true)
-			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+			.addField('Reason', `${reason}`, true);
 
 		message.react('✅');
 		message.client.channels.get(channelIDs.adminLogging).send(warnEmbed);

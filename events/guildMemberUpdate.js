@@ -1,5 +1,4 @@
-const moment = require('moment');
-const {RichEmbed} = require('discord.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = (client, oldMember, newMember) => {
 	const {channelIDs, guildID, messageIDs, roleIDs} = client.config;
@@ -97,13 +96,11 @@ module.exports = (client, oldMember, newMember) => {
 	}
 
 	if (oldMember.displayName !== newMember.displayName) {
-		const nicknameEmbed = new RichEmbed()
-			.setAuthor(newMember.user.username + '#' + newMember.user.discriminator, newMember.user.avatarURL)
+		const nicknameEmbed = createRichEmbed(newMember.user)
 			.setTitle('Nickname Change')
 			.setColor('#0098DB')
 			.addField('Before', `${oldMember.displayName}`, true)
-			.addField('After', `${newMember.displayName}`, true)
-			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+			.addField('After', `${newMember.displayName}`, true);
 
 		client.channels.get(channelIDs.adminLogging).send(nicknameEmbed);
 	}

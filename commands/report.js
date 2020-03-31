@@ -1,6 +1,4 @@
-const moment = require('moment');
-const {RichEmbed} = require('discord.js');
-const {getDiscordId} = require('../utils/functions.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = {
 	name: 'report',
@@ -22,13 +20,11 @@ module.exports = {
 			return;
 		}
 
-		const reportEmbed = new RichEmbed()
-			.setAuthor(getDiscordId(user), user.avatarURL)
+		const reportEmbed = createRichEmbed(user)
 			.setTitle('Report')
 			.setColor('#FF0000')
 			.addField('Reported by', `${message.author}`, true)
-			.addField('Reason', `${reason}`)
-			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
+			.addField('Reason', `${reason}`);
 
 		message.delete();
 		message.author.send('Your report has been submitted!');

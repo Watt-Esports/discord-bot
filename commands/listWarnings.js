@@ -1,7 +1,5 @@
-const moment = require('moment');
 const {GoogleSpreadsheet} = require('google-spreadsheet');
-const {RichEmbed} = require('discord.js');
-const {getDiscordId} = require('../utils/functions.js');
+const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = {
 	name: 'listwarn',
@@ -21,10 +19,6 @@ module.exports = {
 			return;
 		}
 
-		const listWarningEmbed = new RichEmbed()
-			.setAuthor(getDiscordId(user), user.avatarURL)
-			.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
-
 		await spreadsheet.useServiceAccountAuth({
 			/* eslint-disable-next-line camelcase */
 			client_email: spreadsheetConfig.client_email,
@@ -34,6 +28,7 @@ module.exports = {
 
 		await spreadsheet.loadInfo();
 
+		const listWarningEmbed = createRichEmbed(user);
 		const warningSheet = spreadsheet.sheetsByIndex[2];
 		const warningRows = await warningSheet.getRows();
 
