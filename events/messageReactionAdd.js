@@ -23,4 +23,25 @@ module.exports = (client, reaction, user) => {
 			}
 		}
 	}
+
+
+	// AnonSuggestion reaction listening
+	const {modBot} = client.config.channelIDs;
+
+	if (reaction.message.channel == client.channels.get(modBot)) {
+		if(user != client) {
+			// Doesn't work yet
+			if(reaction.emoji.name == '✔') {
+				console.log(reaction.count);
+				console.log(reaction.users.size);
+				if(reaction.users.size == 2) {
+					// Unreactions break this way of doing it
+					console.log('Count is 2');
+				}
+				console.log('Is Tick');
+				// Send in suggestion channel
+				return;
+			}
+		}
+	}
 };
