@@ -6,7 +6,7 @@ module.exports = {
 	guildOnly: true,
 	adminOnly: true,
 	modOnly: true,
-	usage: 'mute <user> <reason>',
+	usage: 'mute <user> <time>',
 	execute(message, args) {
 		const {channelIDs, roleIDs} = message.client.config;
 		const memberToMute = message.mentions.members.first();
