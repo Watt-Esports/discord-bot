@@ -6,24 +6,22 @@ module.exports = {
 	usage: 'vote prep <users>, vote start, vote proxy, vote stop, vote bind <channelid>',
 	execute(message, args) {
 		const command = args.shift();
-		let channelBound = false;
-		let channelId, role;
 
 		switch (command) {
 			case 'bind':
-				const channelToBind = args[1];
+				const channelToBind = args[0];
 
 				if (message.guild && message.guild.available) {
 					message.guild.channels.forEach(channel => {
 						// Message ID is stored as string since it's too big a number to store
 						if (channel.id.toString() === channelToBind) {
-							channelBound = true;
-							channelId = channelToBind;
-							message.channel.send(`${channel.name} has been bound for voting!`);
+							message.client.voteConfig.channelBound = true;
+							message.client.voteConfig.channelId = channelToBind;
+							message.channel.send(`<#${channel.id}> has been bound for voting!`);
 						}
 					});
 
-					if (!channelBound) {
+					if (!message.client.voteConfig.channelBound) {
 						message.reply('Sorry, I can\'t find a channel with that ID!');
 					}
 				} else {
@@ -31,12 +29,30 @@ module.exports = {
 				}
 				break;
 			case 'prep':
-				role = args[0];
-				message.mentions.users.forEach(member => {
-					console.log(member.username);
-				});
+				if (message.client.voteConfig.channelBound) {
+					let stringOfCandidates = '';
 
-				message.channel.send(`Vote is prepared for ${role} in ${channelId}`);
+					message.client.voteConfig.role = args[0];
+					message.mentions.users.forEach(member => {
+						message.client.voteConfig.peopleStandingIds.push(member.id);
+						stringOfCandidates += `${member}\n`;
+					});
+
+					message.channel.send(`Vote is prepared for "${message.client.voteConfig.role}" in <#${message.client.voteConfig.channelId}>\nThe people standing are:\n ${stringOfCandidates}`);
+				} else {
+					message.channel.send('Please bind a channel to vote in first!');
+				}
+				break;
+			case 'start':
+				if (!message.client.voteConfig.channelBound) {
+					message.channel.send('Please bind a channel to vote in first!');
+					break;
+				}
+
+				if (!message.client.voteConfig.role) {
+					message.channel.send('Please define what role is being voted on, along with who is running!');
+					break;
+				}
 		}
 	}
 };
