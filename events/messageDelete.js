@@ -40,5 +40,10 @@ module.exports = async (client, deletedMessage) => {
 		return;
 	}
 
+	// Prevents logging of votes
+	if (deletedMessageContent.startsWith('!vote')) {
+		return;
+	}
+
 	client.channels.get(adminLogging).send(deleteEmbed);
 };
