@@ -8,9 +8,8 @@ client.voteConfig = {
 	channelId: null,
 	role: null,
 	voteOpen: false,
-	candidateReferences: [],
-	voteCount: [],
-	votersList: []
+	peopleStandingIds: [],
+	votes: []
 };
 
 // No empty return either and return breaks function
