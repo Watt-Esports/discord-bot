@@ -181,59 +181,100 @@ module.exports = {
 				break;
 			case 'addproxy':
 				const proxyVoter = message.mentions.users.first();
+				const proxyVotee = message.member.id;
 				const proxyVote = args[1];
-				const proxyVotingGuild = guildObj.members.get(proxyVoter.id);
+				const proxyVoterGuild = guildObj.members.get(proxyVoter.id);
 				let proxyVoted = false;
 				let proxyRunning = false;
 
 				if (message.client.voteConfig.voteOpen) {
 					if (message.channel.name === 'proxy-votes') {
-						message.client.voteConfig.votes.forEach((voteEntry) => {
-							if (voteEntry.voter === proxyVoter.id) {
-								proxyVoted = true;
+						if (proxyVoter) {
+							message.client.voteConfig.votes.forEach((voteEntry) => {
+								if (voteEntry.voter === proxyVoter.id) {
+									proxyVoted = true;
+								}
+							});
+
+							message.client.voteConfig.peopleStandingIds.forEach((standee) => {
+								if (standee === proxyVoter.id) {
+									proxyRunning = true;
+								}
+							});
+
+							if (proxyVoter.id === message.member.id) {
+								message.channel.send('You can\'t proxy for yourself. Please use !vote add <number>');
 							}
-						});
-
-						message.client.voteConfig.peopleStandingIds.forEach((standee) => {
-							if (standee === proxyVoter.id) {
-								proxyRunning = true;
+							if (proxyRunning) {
+								message.channel.send('This person is running for the position being voted on, therefore is not eligible for voting');
+								break;
 							}
-						});
 
-						if (proxyVoter.id === message.member.id) {
-							message.channel.send('You can\'t proxy for yourself. Please use !vote add <number>');
-						}
-						if (proxyRunning) {
-							message.channel.send('This person is running for the position being voted on, therefore is not eligible for voting');
+							if (proxyVoted) {
+								message.channel.send('This user has already submitted a vote via another proxy or themselves');
+								break;
+							}
+
+							if (!proxyVoterGuild.roles.has(roleIDs.socMember)) {
+								message.channel.send('This person is not a society member, and is ineligible to vote. If you think this incorrect, please get in touch with a committee member');
+								break;
+							}
+
+							if (isNaN(proxyVote)) {
+								message.channel.send('Please use a number to vote!');
+								break;
+							}
+
+							if (proxyVote > message.client.voteConfig.peopleStandingIds.length + 2) {
+								message.channel.send(`Please enter a number shown in <#${message.client.voteConfig.channelId}>`);
+								break;
+							}
+
+							const candidateId = message.client.voteConfig.peopleStandingIds[proxyVote - 1];
+							const candidate = guildObj.members.get(candidateId);
+
+							message.channel.send(`You have voted for ${candidate} on behalf of ${proxyVoter}.`);
+							message.client.voteConfig.votes.push({voter: proxyVoter.id, vote: proxyVote});
+							message.cleint.voteConfig.proxyVoters.push({voter: proxyVoter.id, proxy: proxyVotee.id});
+							break;
+						} else {
+							message.channel.send('Please mention someone to add their proxy vote!');
 							break;
 						}
-
-						if (proxyVoted) {
-							message.channel.send('This user has already submitted a vote via another proxy or themselves');
-							break;
-						}
-
-						if (!proxyVotingGuild.roles.has(roleIDs.socMember)) {
-							message.channel.send('This person is not a society member, and is ineligible to vote. If you think this incorrect, please get in touch with a committee member');
-							break;
-						}
-
-						if (isNaN(proxyVote)) {
-							message.channel.send('Please use a number to vote!');
-							break;
-						}
-
-						if (proxyVote > message.client.voteConfig.peopleStandingIds.length + 2) {
-							message.channel.send(`Please enter a number shown in <#${message.client.voteConfig.channelId}>`);
-							break;
-						}
-
-						const candidateId = message.client.voteConfig.peopleStandingIds[proxyVote - 1];
-						const candidate = guildObj.members.get(candidateId);
-
-						message.channel.send(`You have voted for ${candidate} on behalf of ${proxyVoter}.`);
-						message.client.voteConfig.votes.push({voter: proxyVoter.id, vote: proxyVote});
 					}
+				}
+				break;
+			case 'cancelproxy':
+				const proxyVoterCancel = message.mentions.users.first();
+				const proxyVoteeCancel = message.member;
+				let proxyHasVoted = false;
+				let proxyVoteToRemove = {};
+
+				if (message.client.voteConfig.voteOpen) {
+					message.client.voteConfig.votes.forEach((votePair) => {
+						if (votePair.voter === proxyVoterCancel.id) {
+							proxyVoteToRemove = message.client.voteConfig.votes.indexOf(votePair);
+							proxyHasVoted = true;
+						}
+					});
+
+					if (!proxyVoterCancel) {
+						message.channel.send('Please mention a user to remove their proxy');
+						break;
+					}
+
+					if (message.client.voteConfig.proxyVoters.proxy !== proxyVoteeCancel.id) {
+						message.channel.send('You can only remove proxy votes for people you have proxied for');
+						break;
+					}
+					if (proxyHasVoted) {
+						message.client.voteConfig.votes.splice(proxyVoteToRemove, 1);
+						message.channel.send(`Vote removed for ${proxyVoterCancel}. Please re add the vote via the addproxy command`);
+						break;
+					}
+				} else {
+					message.channel.send('This person has no proxy vote in currently!');
+					break;
 				}
 		}
 	}

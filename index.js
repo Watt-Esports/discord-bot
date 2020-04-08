@@ -9,7 +9,8 @@ client.voteConfig = {
 	role: null,
 	voteOpen: false,
 	peopleStandingIds: [],
-	votes: []
+	votes: [],
+	proxyVoters: []
 };
 
 // No empty return either and return breaks function
