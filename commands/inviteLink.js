@@ -4,9 +4,8 @@ module.exports = {
 	usage: 'link',
 	helpMsg: true,
 	execute(message) {
-		const {inviteLink} = message.client.config;
-		const {botSpam} = message.client.config.channelIDs;
+		const {inviteLink, channelIDs} = message.client.config;
 
-		message.client.channels.get(botSpam).send(`${message.member} ${inviteLink}`);
+		message.client.channels.get(channelIDs.botSpam).send(`${message.member} ${inviteLink}`);
 	}
 };
