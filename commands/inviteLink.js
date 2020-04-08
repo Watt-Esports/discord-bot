@@ -5,11 +5,15 @@ module.exports = {
 	helpMsg: true,
 	execute(message) {
 		const {inviteLink, channelIDs} = message.client.config;
+		let flavour;
 
+		// To avoid facepinging the good boy that uses the bot channel <3
 		if (message.channel.id == channelIDs.botSpam) {
-			message.channel.send(`Oh look, it's a good boy using the bot channel! \n ${inviteLink}`);
+			flavour = 'Oh look, it\'s a good boy using the bot channel! \n';
 		} else {
-			message.client.channels.get(channelIDs.botSpam).send(`${message.member} ${inviteLink}`);
+			flavour = message.member;
 		}
+
+		message.client.channels.get(channelIDs.botSpam).send(`${flavour} ${inviteLink}`);
 	}
 };
