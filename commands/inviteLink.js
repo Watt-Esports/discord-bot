@@ -6,6 +6,10 @@ module.exports = {
 	execute(message) {
 		const {inviteLink, channelIDs} = message.client.config;
 
-		message.client.channels.get(channelIDs.botSpam).send(`${message.member} ${inviteLink}`);
+		if (message.channel.id == channelIDs.botSpam) {
+			message.channel.send(`Oh look, it's a good boy using the bot channel! \n ${inviteLink}`);
+		} else {
+			message.client.channels.get(channelIDs.botSpam).send(`${message.member} ${inviteLink}`);
+		}
 	}
 };
