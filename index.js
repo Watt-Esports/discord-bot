@@ -10,7 +10,8 @@ client.voteConfig = {
 	voteOpen: false,
 	peopleStandingIds: [],
 	votes: [],
-	proxyVoters: []
+	voteCounts: [],
+	proxyVoters: [],
 };
 
 // No empty return either and return breaks function

@@ -12,12 +12,11 @@ module.exports = {
 		switch (command) {
 			case 'bind':
 				const channelToBind = args[0];
-				const personBinding = message.member;
-				const personBindingDiscord = guildObj.members.get(personBinding.id);
+				const personBindingChannel = message.member;
 
-				if (personBindingDiscord.roles.has(roleIDs.admin)) {
+				if (personBindingChannel.roles.has(roleIDs.admin)) {
 					if (message.guild && message.guild.available) {
-						message.guild.channels.forEach(channel => {
+						message.guild.channels.find(channel => {
 							// Message ID is stored as string since it's too big a number to store
 							if (channel.id.toString() === channelToBind) {
 								message.client.voteConfig.channelBound = true;
@@ -35,8 +34,9 @@ module.exports = {
 				}
 				break;
 			case 'prep':
-				const personPrepping = message.member;
-				const personPreppingVote = guildObj.members.get(personPrepping.id);
+				const personPreppingVote = message.member;
+
+				message.client.voteConfig.peopleStandingIds = [];
 
 				if (personPreppingVote.roles.has(roleIDs.admin)) {
 					if (message.client.voteConfig.channelBound) {
@@ -55,8 +55,7 @@ module.exports = {
 				}
 				break;
 			case 'start':
-				const personStarting = message.member;
-				const personStartingVote = guildObj.members.get(personStarting.id);
+				const personStartingVote = message.member;
 
 				if (personStartingVote.roles.has(roleIDs.admin)) {
 					if (!message.client.voteConfig.channelBound) {
@@ -83,7 +82,11 @@ module.exports = {
 
 						const peopleRunningTotal = peopleStanding.length;
 
-						votingOpenMessage += `[${peopleRunningTotal + 1}] - RON\n[${peopleRunningTotal + 2}] - Abstain\nTo vote, DM ${message.client.user} "!vote add <number>" where number is the assigned to the person you want to vote for`;
+						for (let i = 0; i < peopleRunningTotal + 2; i++) {
+							message.client.voteConfig.voteCounts.push(0);
+						}
+
+						votingOpenMessage += `[${peopleRunningTotal + 1}] - RON\n[${peopleRunningTotal + 2}] - Abstain\nTo vote, DM ${message.client.user} "!vote add <number>" where number is the assigned to the person you want to vote for\nFor proxy votes, this should have been set up and explained to you prior to this. If this is not the case, please let a committee member know`;
 
 						message.client.channels.get(message.client.voteConfig.channelId).send(votingOpenMessage);
 						message.client.voteConfig.voteOpen = true;
@@ -98,13 +101,13 @@ module.exports = {
 				let memberVoted = false;
 				let memberRunning = false;
 
-				message.client.voteConfig.votes.forEach((voteEntry) => {
+				message.client.voteConfig.votes.find((voteEntry) => {
 					if (voteEntry.voter === message.author.id) {
 						memberVoted = true;
 					}
 				});
 
-				message.client.voteConfig.peopleStandingIds.forEach((standee) => {
+				message.client.voteConfig.peopleStandingIds.find((standee) => {
 					if (standee === message.author.id) {
 						memberRunning = true;
 					}
@@ -113,6 +116,7 @@ module.exports = {
 				if (message.client.voteConfig.voteOpen) {
 					if (memberRunning) {
 						memberVoting.send('You are standing for this position, therefore cannot vote!');
+						break;
 					}
 					if (!memberVotingGuild.roles.has(roleIDs.socMember)) {
 						memberVoting.send('Sorry, you aren\'t a society member, and cannot vote. If you think this is incorrect, please DM a commitee member');
@@ -136,16 +140,27 @@ module.exports = {
 						break;
 					}
 
-					if (voteToCast > message.client.voteConfig.peopleStandingIds.length + 2) {
+					if ((voteToCast > message.client.voteConfig.peopleStandingIds.length + 2) || (voteToCast < 0)) {
 						memberVoting.send(`Please enter a number shown in <#${message.client.voteConfig.channelId}>`);
 						break;
 					}
 
 					const candidateId = message.client.voteConfig.peopleStandingIds[voteToCast - 1];
-					const candidate = guildObj.members.get(candidateId);
+					let candidate = guildObj.members.get(candidateId);
+
+					if (voteToCast === message.client.voteConfig.peopleStandingIds.length + 1) {
+						candidate = 're-opening nominations';
+					}
+
+					if (voteToCast === message.client.voteConfig.peopleStandingIds.length + 2) {
+						candidate = 'abstaining';
+					}
+
 
 					memberVoting.send(`You have voted for ${candidate}. If this is incorrect, please reply with !vote cancel, and revote!`);
 					message.client.voteConfig.votes.push({voter: message.author.id, vote: voteToCast});
+					message.client.voteConfig.voteCounts[voteToCast - 1] += 1;
+					console.log(message.client.voteConfig.voteCounts);
 
 				} else if (message.channel.type === 'text') {
 					message.delete();
@@ -160,18 +175,21 @@ module.exports = {
 				const memberCancellingVote = message.author;
 				let memberHasVoted = false;
 				let voteToRemove = {};
+				let voteToRemoveIndex = {};
 
 				if (message.client.voteConfig.voteOpen) {
-					message.client.voteConfig.votes.forEach((votePair) => {
+					message.client.voteConfig.votes.find((votePair) => {
 						if (votePair.voter === memberCancellingVote.id) {
-							voteToRemove = message.client.voteConfig.votes.indexOf(votePair);
+							voteToRemove = votePair.vote;
+							voteToRemoveIndex = message.client.voteConfig.votes.indexOf(votePair);
 							memberHasVoted = true;
 						}
 					});
 
 					if (memberHasVoted) {
-						message.client.voteConfig.votes.splice(voteToRemove, 1);
+						message.client.voteConfig.votes.splice(voteToRemoveIndex, 1);
 						message.author.send('Vote removed successfully. Please DM me with your new vote');
+						message.client.voteConfig.voteCounts[voteToRemove - 1] -= 1;
 						break;
 					} else {
 						message.author.send('You haven\'t placed a vote yet!');
@@ -183,20 +201,21 @@ module.exports = {
 				const proxyVoter = message.mentions.users.first();
 				const proxyVotee = message.member.id;
 				const proxyVote = args[1];
-				const proxyVoterGuild = guildObj.members.get(proxyVoter.id);
 				let proxyVoted = false;
 				let proxyRunning = false;
 
 				if (message.client.voteConfig.voteOpen) {
 					if (message.channel.name === 'proxy-votes') {
 						if (proxyVoter) {
-							message.client.voteConfig.votes.forEach((voteEntry) => {
+							const proxyVoterGuild = guildObj.members.get(proxyVoter.id);
+
+							message.client.voteConfig.votes.find((voteEntry) => {
 								if (voteEntry.voter === proxyVoter.id) {
 									proxyVoted = true;
 								}
 							});
 
-							message.client.voteConfig.peopleStandingIds.forEach((standee) => {
+							message.client.voteConfig.peopleStandingIds.find((standee) => {
 								if (standee === proxyVoter.id) {
 									proxyRunning = true;
 								}
@@ -204,6 +223,7 @@ module.exports = {
 
 							if (proxyVoter.id === message.member.id) {
 								message.channel.send('You can\'t proxy for yourself. Please use !vote add <number>');
+								break;
 							}
 							if (proxyRunning) {
 								message.channel.send('This person is running for the position being voted on, therefore is not eligible for voting');
@@ -225,7 +245,7 @@ module.exports = {
 								break;
 							}
 
-							if (proxyVote > message.client.voteConfig.peopleStandingIds.length + 2) {
+							if ((proxyVote > message.client.voteConfig.peopleStandingIds.length + 2) || (proxyVote < 0)) {
 								message.channel.send(`Please enter a number shown in <#${message.client.voteConfig.channelId}>`);
 								break;
 							}
@@ -233,9 +253,10 @@ module.exports = {
 							const candidateId = message.client.voteConfig.peopleStandingIds[proxyVote - 1];
 							const candidate = guildObj.members.get(candidateId);
 
-							message.channel.send(`You have voted for ${candidate} on behalf of ${proxyVoter}.`);
+							message.channel.send(`You have voted for ${candidate} on behalf of ${proxyVoter}.\n If this is incorrect, please reply with !vote cancelproxy, and revote!`);
 							message.client.voteConfig.votes.push({voter: proxyVoter.id, vote: proxyVote});
-							message.cleint.voteConfig.proxyVoters.push({voter: proxyVoter.id, proxy: proxyVotee.id});
+							message.client.voteConfig.voteCounts[proxyVote - 1] += 1;
+							message.client.voteConfig.proxyVoters.push({voter: proxyVoter.id, proxy: proxyVotee});
 							break;
 						} else {
 							message.channel.send('Please mention someone to add their proxy vote!');
@@ -248,27 +269,39 @@ module.exports = {
 				const proxyVoterCancel = message.mentions.users.first();
 				const proxyVoteeCancel = message.member;
 				let proxyHasVoted = false;
+				let notOriginalProxy = false;
 				let proxyVoteToRemove = {};
+				let proxyVoteToRemoveIndex = {};
 
 				if (message.client.voteConfig.voteOpen) {
-					message.client.voteConfig.votes.forEach((votePair) => {
-						if (votePair.voter === proxyVoterCancel.id) {
-							proxyVoteToRemove = message.client.voteConfig.votes.indexOf(votePair);
-							proxyHasVoted = true;
-						}
-					});
-
 					if (!proxyVoterCancel) {
 						message.channel.send('Please mention a user to remove their proxy');
 						break;
 					}
 
-					if (message.client.voteConfig.proxyVoters.proxy !== proxyVoteeCancel.id) {
+					message.client.voteConfig.votes.find((votePair) => {
+						if (votePair.voter === proxyVoterCancel.id) {
+							proxyVoteToRemove = votePair.vote;
+							proxyVoteToRemoveIndex = message.client.voteConfig.votes.indexOf(votePair);
+							proxyHasVoted = true;
+						}
+					});
+
+					message.client.voteConfig.proxyVoters.find((votePair) => {
+						if (votePair.voter === proxyVoterCancel.id && votePair.proxy !== proxyVoteeCancel.id) {
+							console.log(votePair);
+							notOriginalProxy = true;
+						}
+					});
+
+					if (notOriginalProxy) {
 						message.channel.send('You can only remove proxy votes for people you have proxied for');
 						break;
 					}
+
 					if (proxyHasVoted) {
-						message.client.voteConfig.votes.splice(proxyVoteToRemove, 1);
+						message.client.voteConfig.votes.splice(proxyVoteToRemoveIndex, 1);
+						message.client.voteConfig.voteCounts[proxyVoteToRemove - 1] -= 1;
 						message.channel.send(`Vote removed for ${proxyVoterCancel}. Please re add the vote via the addproxy command`);
 						break;
 					}
@@ -276,6 +309,33 @@ module.exports = {
 					message.channel.send('This person has no proxy vote in currently!');
 					break;
 				}
+				break;
+			case 'results':
+				const personRequestingResults = message.member;
+				let resultMessage = 'Results Time!\n';
+
+				if (personRequestingResults.roles.has(roleIDs.admin)) {
+					for (const personStanding of message.client.voteConfig.peopleStandingIds) {
+						const personStandingDiscord = message.guild.members.get(personStanding);
+						const votesRecieved = message.client.voteConfig.voteCounts[message.client.voteConfig.peopleStandingIds.indexOf(personStanding)];
+
+						resultMessage += `${personStandingDiscord} recieved ${votesRecieved} votes\n`;
+					}
+					resultMessage += `${message.client.voteConfig.voteCounts[message.client.voteConfig.peopleStandingIds.length]} people want to re-open nominations\n`;
+					resultMessage += `${message.client.voteConfig.voteCounts[message.client.voteConfig.peopleStandingIds.length + 1]} people want to Abstain`;
+					message.client.channels.get(message.client.voteConfig.channelId).send(resultMessage);
+					message.client.voteConfig = {
+						channelBound: message.client.voteConfig.channelBound,
+						channelId: message.client.voteConfig.channelId,
+						role: null,
+						voteOpen: false,
+						peopleStandingIds: [],
+						votes: [],
+						voteCounts: [],
+						proxyVoters: []
+					};
+				}
+
 		}
 	}
 };
