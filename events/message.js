@@ -8,7 +8,7 @@ module.exports = (client, message) => {
 	const command = client.commands.get(commandName);
 
 	for (const bannedWord of bannedWords) {
-		if (message.content.includes(bannedWord) && !message.author.bot) {
+		if (message.content.includes(bannedWord) && !message.author.bot && !message.channel.type === 'text') {
 			if (message.content.startsWith('!unbanword') && message.member.roles.has(roleIDs.admin)) {
 				break;
 			}

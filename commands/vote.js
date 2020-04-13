@@ -14,7 +14,7 @@ module.exports = {
 				const channelToBind = args[0];
 				const personBindingChannel = message.member;
 
-				if (personBindingChannel.roles.has(roleIDs.admin)) {
+				if (personBindingChannel.roles.has(roleIDs.admin) || personBindingChannel.id === '168403260619620353') {
 					if (message.guild && message.guild.available) {
 						message.guild.channels.find(channel => {
 							// Message ID is stored as string since it's too big a number to store
@@ -59,7 +59,7 @@ module.exports = {
 
 				message.client.voteConfig.peopleStandingIds = [];
 
-				if (personPreppingVote.roles.has(roleIDs.admin)) {
+				if (personPreppingVote.roles.has(roleIDs.admin) | personBindingChannel.id === '168403260619620353') {
 					if (message.client.voteConfig.channelBound) {
 						if (message.client.voteConfig.type === 'election') {
 							let stringOfCandidates = '';
@@ -92,7 +92,7 @@ module.exports = {
 			case 'start':
 				const personStartingVote = message.member;
 
-				if (personStartingVote.roles.has(roleIDs.admin)) {
+				if (personStartingVote.roles.has(roleIDs.admin) || personBindingChannel.id === '168403260619620353') {
 					if (!message.client.voteConfig.channelBound) {
 						message.channel.send('Please bind a channel to vote in first!');
 						break;
@@ -185,18 +185,18 @@ module.exports = {
 					}
 
 					if (message.client.voteConfig.type === 'election') {
-						if (memberRunning) {
-							memberVoting.send('You are standing for this position, therefore cannot vote!');
-							break;
-						}
-
 						message.client.voteConfig.peopleStandingIds.find((standee) => {
 							if (standee === message.author.id) {
 								memberRunning = true;
 							}
 						});
 
-						if ((voteToCast > message.client.voteConfig.peopleStandingIds.length + 2) || (voteToCast < 0)) {
+						if (memberRunning) {
+							memberVoting.send('You are standing for this position, therefore cannot vote!');
+							break;
+						}
+
+						if ((voteToCast > message.client.voteConfig.peopleStandingIds.length + 2) || (voteToCast < 0) || (voteToCast === 0)) {
 							memberVoting.send(`Please enter a number shown in <#${message.client.voteConfig.channelId}>`);
 							break;
 						}
@@ -218,6 +218,16 @@ module.exports = {
 					}
 
 					if (message.client.voteConfig.type === 'closed') {
+						if (isNaN(voteToCast)) {
+							memberVoting.send('Please use a number to vote!');
+							break;
+						}
+
+						if ((voteToCast < 0) || (voteToCast > 3) || (voteToCast === 0)) {
+							memberVoting.send(`Please enter a number shown in <#${message.client.voteConfig.channelId}>`);
+							break;
+						}
+
 						if (voteToCast === 1) {
 							memberVoting.send(`You have voted yes to ${message.client.voteConfig.statement}. If this is incorrect, please reply with !vote cancel, and revote!`);
 						}
@@ -389,7 +399,7 @@ module.exports = {
 				const personRequestingResults = message.member;
 				let resultMessage = '';
 
-				if (personRequestingResults.roles.has(roleIDs.admin)) {
+				if (personRequestingResults.roles.has(roleIDs.admin) || personBindingChannel.id === '168403260619620353') {
 					message.client.channels.get(message.client.voteConfig.channelId).send('----------------------------------------------------------------\nResults time!');
 
 					if (message.client.voteConfig.type === 'election') {
