@@ -12,6 +12,8 @@ client.voteConfig = {
 	votes: [],
 	voteCounts: [],
 	proxyVoters: [],
+	type: null,
+	statement: null
 };
 
 // No empty return either and return breaks function
