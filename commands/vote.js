@@ -14,7 +14,7 @@ module.exports = {
 				const channelToBind = args[0];
 				const personBindingChannel = message.member;
 
-				if (personBindingChannel.roles.has(roleIDs.admin) || personBindingChannel.id === '168403260619620353') {
+				if (personBindingChannel.roles.has(roleIDs.admin)) {
 					if (message.guild && message.guild.available) {
 						message.guild.channels.find(channel => {
 							// Message ID is stored as string since it's too big a number to store
@@ -59,7 +59,7 @@ module.exports = {
 
 				message.client.voteConfig.peopleStandingIds = [];
 
-				if (personPreppingVote.roles.has(roleIDs.admin) | personBindingChannel.id === '168403260619620353') {
+				if (personPreppingVote.roles.has(roleIDs.admin)) {
 					if (message.client.voteConfig.channelBound) {
 						if (message.client.voteConfig.type === 'election') {
 							let stringOfCandidates = '';
@@ -92,7 +92,7 @@ module.exports = {
 			case 'start':
 				const personStartingVote = message.member;
 
-				if (personStartingVote.roles.has(roleIDs.admin) || personBindingChannel.id === '168403260619620353') {
+				if (personStartingVote.roles.has(roleIDs.admin)) {
 					if (!message.client.voteConfig.channelBound) {
 						message.channel.send('Please bind a channel to vote in first!');
 						break;
@@ -399,7 +399,7 @@ module.exports = {
 				const personRequestingResults = message.member;
 				let resultMessage = '';
 
-				if (personRequestingResults.roles.has(roleIDs.admin) || personBindingChannel.id === '168403260619620353') {
+				if (personRequestingResults.roles.has(roleIDs.admin)) {
 					message.client.channels.get(message.client.voteConfig.channelId).send('----------------------------------------------------------------\nResults time!');
 
 					if (message.client.voteConfig.type === 'election') {
