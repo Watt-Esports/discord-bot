@@ -8,7 +8,8 @@ module.exports = (client, oldMessage, newMessage) => {
 	if (!oldMessage.partial) {
 		const editEmbed = createRichEmbed(user)
 			.setColor('#0098DB')
-			.addField('Message Edit', `[Jump to Message](https://discordapp.com/channels/${newMessage.guild.id}/${newMessage.channel.id}/${newMessage.id})`)
+			.setTitle('Message Edited')
+			.setDescription(`[Jump to Message](https://discordapp.com/channels/${newMessage.guild.id}/${newMessage.channel.id}/${newMessage.id}) in ${oldMessage.channel}`)
 			.addField('Before', `${oldMessage.content}`)
 			.addField('After', `${newMessage.content}`);
 
