@@ -2,6 +2,7 @@ module.exports = {
 	name: 'link',
 	description: 'Provides discord invite link',
 	usage: 'link',
+	aliases: ['invite'],
 	helpMsg: true,
 	execute(message) {
 		const {inviteLink, channelIDs} = message.client.config;
