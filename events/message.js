@@ -5,7 +5,7 @@ module.exports = (client, message) => {
 	const {prefix, channelIDs, roleIDs} = client.config;
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
-	const command = client.commands.get(commandName);
+	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	for (const bannedWord of bannedWords) {
 		if (message.content.includes(bannedWord) && !message.author.bot) {
@@ -32,7 +32,7 @@ module.exports = (client, message) => {
 		message.channel.send('!!');
 	}
 
-	if (!client.commands.has(commandName)) return;
+	if (!command) return;
 
 	try {
 		if (command.guildOnly && message.channel.type !== 'text') {
