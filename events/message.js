@@ -8,7 +8,7 @@ module.exports = (client, message) => {
 	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	for (const bannedWord of bannedWords) {
-		if (message.content.includes(bannedWord) && !message.author.bot) {
+		if (message.content.includes(bannedWord) && !message.author.bot && message.channel.type === 'text') {
 			if (message.content.startsWith('!unbanword') && message.member.roles.has(roleIDs.admin)) {
 				break;
 			}
@@ -46,6 +46,6 @@ module.exports = (client, message) => {
 		}
 	} catch (error) {
 		console.error(error);
-		message.reply('there was an error trying to execute that command!');
+		message.reply(' there was an error trying to execute that command!');
 	}
 };
