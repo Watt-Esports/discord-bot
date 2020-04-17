@@ -1,9 +1,9 @@
 module.exports = async (client, oldState, newState) => {
-	const voiceChannelIDs = client.config.voiceChannelIDs;
+	const stackVCIDs = client.config.stackVCIDs;
 
 	// To increase stack names when over filled
-	if (newState.voiceChannelID in voiceChannelIDs) {
-		const intendedStackSize = voiceChannelIDs[newState.voiceChannelID];
+	if (newState.voiceChannelID in stackVCIDs) {
+		const intendedStackSize = stackVCIDs[newState.voiceChannelID];
 
 		if (newState.voiceChannel.members.size > intendedStackSize) {
 			await newState.voiceChannel.setUserLimit(newState.voiceChannel.members.size);
@@ -12,8 +12,8 @@ module.exports = async (client, oldState, newState) => {
 	}
 
 	// To decrease stack names when under filled
-	if (oldState.voiceChannelID in voiceChannelIDs) {
-		const intendedStackSize = voiceChannelIDs[oldState.voiceChannelID];
+	if (oldState.voiceChannelID in stackVCIDs) {
+		const intendedStackSize = stackVCIDs[oldState.voiceChannelID];
 
 		if (oldState.voiceChannel.members.size + 1 > intendedStackSize) {
 			// +1 because oldState only has the new members left in the channel (not counting the user that just left)
