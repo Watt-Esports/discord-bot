@@ -5,7 +5,6 @@ module.exports = {
 	name: 'listwarn',
 	description: 'List all the warnings for a certain user',
 	guildOnly: true,
-	adminOnly: true,
 	modOnly: true,
 	usage: 'listwarn <user>',
 	async execute(message) {
