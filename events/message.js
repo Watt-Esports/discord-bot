@@ -26,24 +26,25 @@ module.exports = (client, message) => {
 		}
 	}
 
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-	if (message.content === prefix) {
+	if (message.content === '!') {
 		message.channel.send('!!');
 	}
 
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
 	if (!command) return;
 
+	if (command.guildOnly && message.channel.type !== 'text') {
+		message.reply('I can\'t execute that command inside DMs!');
+		return;
+	}
+
+	if (command.adminOnly && !message.member.roles.has(roleIDs.admin)) return;
+
+	if (command.modOnly && !(message.member.roles.has(roleIDs.admin) || message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) return;
+
 	try {
-		if (command.guildOnly && message.channel.type !== 'text') {
-			message.reply('I can\'t execute that command inside DMs!');
-		} else if (command.adminOnly && !message.member.roles.has(roleIDs.admin)) {
-			return;
-		} else if (command.modOnly && !(message.member.roles.has(roleIDs.admin) || message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) {
-			return;
-		} else {
-			command.execute(message, args);
-		}
+		command.execute(message, args);
 	} catch (error) {
 		console.error(error);
 		message.reply(' there was an error trying to execute that command!');

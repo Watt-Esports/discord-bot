@@ -6,7 +6,6 @@ module.exports = {
 	name: 'warn',
 	description: 'Creates a warning for the mentioned user with a reason',
 	guildOnly: true,
-	adminOnly: true,
 	modOnly: true,
 	usage: 'warn <user> <reason>',
 	async execute(message, args) {
