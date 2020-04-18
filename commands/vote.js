@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-/* eslint-disable indent */
 module.exports = {
 	name: 'vote',
 	description: 'All functionality around intiating a vote',
