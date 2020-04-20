@@ -5,7 +5,6 @@ module.exports = {
 	description: 'Lists all warnings for every user',
 	guildOnly: true,
 	modOnly: true,
-	adminOnly: true,
 	usage: 'allwarnings',
 	async execute(message) {
 		const {channelIDs, spreadsheetID, spreadsheetConfig} = message.client.config;

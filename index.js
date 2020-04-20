@@ -3,6 +3,18 @@ const {Client, Collection} = require('discord.js');
 const client = new Client();
 
 client.config = require('./config.json');
+client.voteConfig = {
+	channelBound: false,
+	channelId: null,
+	role: null,
+	voteOpen: false,
+	peopleStandingIds: [],
+	votes: [],
+	voteCounts: [],
+	proxyVoters: [],
+	type: null,
+	statement: null
+};
 
 // No empty return either and return breaks function
 // eslint-disable-next-line consistent-return

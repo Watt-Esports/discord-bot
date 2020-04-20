@@ -5,10 +5,10 @@ module.exports = (client, message) => {
 	const {prefix, channelIDs, roleIDs} = client.config;
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const commandName = args.shift().toLowerCase();
-	const command = client.commands.get(commandName);
+	const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 	for (const bannedWord of bannedWords) {
-		if (message.content.includes(bannedWord) && !message.author.bot) {
+		if (message.content.includes(bannedWord) && !message.author.bot && message.channel.type === 'text') {
 			if (message.content.startsWith('!unbanword') && message.member.roles.has(roleIDs.admin)) {
 				break;
 			}
@@ -26,26 +26,27 @@ module.exports = (client, message) => {
 		}
 	}
 
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-	if (message.content === prefix) {
+	if (message.content === '!') {
 		message.channel.send('!!');
 	}
 
-	if (!client.commands.has(commandName)) return;
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+	if (!command) return;
+
+	if (command.guildOnly && message.channel.type !== 'text') {
+		message.reply('I can\'t execute that command inside DMs!');
+		return;
+	}
+
+	if (command.adminOnly && !message.member.roles.has(roleIDs.admin)) return;
+
+	if (command.modOnly && !(message.member.roles.has(roleIDs.admin) || message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) return;
 
 	try {
-		if (command.guildOnly && message.channel.type !== 'text') {
-			message.reply('I can\'t execute that command inside DMs!');
-		} else if (command.adminOnly && !message.member.roles.has(roleIDs.admin)) {
-			return;
-		} else if (command.modOnly && !(message.member.roles.has(roleIDs.admin) || message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) {
-			return;
-		} else {
-			command.execute(message, args);
-		}
+		command.execute(message, args);
 	} catch (error) {
 		console.error(error);
-		message.reply('there was an error trying to execute that command!');
+		message.reply(' there was an error trying to execute that command!');
 	}
 };

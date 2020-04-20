@@ -5,7 +5,6 @@ module.exports = {
 	name: 'addrole',
 	description: 'Links a reaction to a role on a certain message',
 	guildOnly: true,
-	adminOnly: true,
 	modOnly: true,
 	usage: 'addrole <emote> <rolename> <messageID>',
 	execute(message, args) {

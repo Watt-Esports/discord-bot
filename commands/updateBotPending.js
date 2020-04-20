@@ -6,7 +6,6 @@ module.exports = {
 	description: 'Updates Society Member list',
 	guildOnly: true,
 	adminOnly: true,
-	modOnly: false,
 	usage: 'update',
 	async execute(message) {
 		const {guildID, roleIDs, spreadsheetID, spreadsheetConfig} = message.client.config;
