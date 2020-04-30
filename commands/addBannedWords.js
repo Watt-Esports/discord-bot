@@ -1,4 +1,4 @@
-const bannedWordList = require('../utils/profanities.json');
+const bannedWords = require('../utils/profanities.json');
 const {writeFile} = require('fs');
 
 module.exports = {
@@ -6,23 +6,43 @@ module.exports = {
 	description: 'Adds a word to the banned word list',
 	guildOnly: true,
 	adminOnly: true,
-	usage: 'banword <wordToAdd>',
+	usage: 'banword exact <wordToAdd>, banword wildcard <wordToAdd>',
 	execute(message, args) {
 		const {adminLogging} = message.client.config.channelIDs;
-		const wordToAdd = args[0];
+		const typeOfAddition = args[0];
+		const wordToAdd = args[1];
 
-		if (args.length !== 1) {
+		if (!typeOfAddition) {
+			message.client.channels.get(adminLogging).send('Please add the type of word you\'re trying to ban (exact or wildcard)');
+			return;
+		}
+
+		if (!wordToAdd) {
 			message.client.channels.get(adminLogging).send('Please add a word to ban!');
 			return;
 		}
 
-		bannedWordList.bannedWords.push(wordToAdd);
-		writeFile('utils/profanities.json', JSON.stringify(bannedWordList), (err) => {
-			if (err) {
-				throw err;
-			}
+		switch (typeOfAddition) {
+			case 'exact':
+				bannedWords.exact.push(wordToAdd);
+				writeFile('utils/profanities.json', JSON.stringify(bannedWords), (err) => {
+					if (err) {
+						throw err;
+					}
 
-			message.react('✅');
-		});
+					message.react('✅');
+				});
+				break;
+			case 'wildcard':
+				bannedWords.wildcard.push(wordToAdd);
+				writeFile('utils/profanities.json', JSON.stringify(bannedWords), (err) => {
+					if (err) {
+						throw err;
+					}
+
+					message.react('✅');
+				});
+				break;
+		}
 	}
 };

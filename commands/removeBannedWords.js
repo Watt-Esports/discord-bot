@@ -6,26 +6,49 @@ module.exports = {
 	description: 'Removes a banned word from the list',
 	guildOnly: true,
 	adminOnly: true,
-	usage: 'unbanword <wordToRemove>',
+	usage: 'unbanword exact <wordToRemove>, unbanword wildcard <wordtoRemove>',
 	execute(message, args) {
 		const {adminLogging} = message.client.config.channelIDs;
-		const wordToRemove = args[0];
+		const typeOfRemoval = args[0];
+		const wordToRemove = args[1];
 
-		if (args.length !== 1) {
-			message.client.channels.get(adminLogging).send('Please add a word to remove!');
+		if (typeOfRemoval !== ('exact' || 'wildcard')) {
+			message.client.channels.get(adminLogging).send('Please add the type of word you\'re trying to remove (exact or wildcard)');
 			return;
 		}
 
-		if (!bannedWordList.bannedWords.includes(wordToRemove.toString())) {
-			message.client.channels.get(adminLogging).send('Word does not exist in banned list!');
+		if (!wordToRemove) {
+			message.client.channels.get(adminLogging).send('Please add a word to remove');
 			return;
 		}
 
-		for (const [index, word] of bannedWordList.bannedWords.entries()) {
-			if (word === wordToRemove) {
-				bannedWordList.bannedWords.splice(index, 1);
+		switch (typeOfRemoval) {
+			case 'exact':
+				if (!bannedWordList.exact.includes(wordToRemove.toString())) {
+					message.client.channels.get(adminLogging).send('Word does not exist in banned list!');
+					return;
+				}
+
+				for (const [index, word] of bannedWordList.exact.entries()) {
+					if (word === wordToRemove) {
+						bannedWordList.exact.splice(index, 1);
+						break;
+					}
+				}
 				break;
-			}
+			case 'wildcard':
+				if (!bannedWordList.exact.includes(wordToRemove.toString())) {
+					message.client.channels.get(adminLogging).send('Word does not exist in banned list!');
+					return;
+				}
+
+				for (const [index, word] of bannedWordList.wildcard.entries()) {
+					if (word === wordToRemove) {
+						bannedWordList.wildcard.splice(index, 1);
+						break;
+					}
+				}
+				break;
 		}
 
 		writeFile('utils/profanities.json', JSON.stringify(bannedWordList), (err) => {

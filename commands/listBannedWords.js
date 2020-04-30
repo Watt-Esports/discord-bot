@@ -1,4 +1,4 @@
-const {bannedWords} = require('../utils/profanities.json');
+const bannedWords = require('../utils/profanities.json');
 
 module.exports = {
 	name: 'listbanwords',
@@ -7,8 +7,11 @@ module.exports = {
 	adminOnly: true,
 	usage: 'listbanwords',
 	execute(message) {
+		const exactBannedWordsString = bannedWords.exact.join(', ');
+		const wildcardBannedWordsString = bannedWords.wildcard.join(', ');
+		const bannedWordList = `**Exacts**: ${exactBannedWordsString}\n**Wildcards**: ${wildcardBannedWordsString}`;
 		const {adminLogging} = message.client.config.channelIDs;
 
-		message.client.channels.get(adminLogging).send(bannedWords.join(', '));
+		message.client.channels.get(adminLogging).send(bannedWordList);
 	}
 };

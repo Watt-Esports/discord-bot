@@ -1,4 +1,4 @@
-const {bannedWords} = require('../utils/profanities.json');
+const bannedWords = require('../utils/profanities.json');
 const {createRichEmbed} = require('../utils/createRichEmbed.js');
 
 module.exports = async (client, deletedMessage) => {
@@ -24,7 +24,13 @@ module.exports = async (client, deletedMessage) => {
 		.addField('Deleted By', `${deletedBy}`);
 
 	// Prevents double logging when banned word used
-	for (const word of bannedWords) {
+	for (const word of bannedWords.exact) {
+		if (deletedMessageContent.includes(word)) {
+			return;
+		}
+	}
+
+	for (const word of bannedWords.wildcard) {
 		if (deletedMessageContent.includes(word)) {
 			return;
 		}
@@ -42,6 +48,10 @@ module.exports = async (client, deletedMessage) => {
 
 	// Prevents logging of votes
 	if (deletedMessageContent.startsWith('!vote')) {
+		return;
+	}
+
+	if (deletedMessageContent.endsWith('Watch your language!') && user.bot) {
 		return;
 	}
 
