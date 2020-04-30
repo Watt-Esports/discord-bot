@@ -8,7 +8,6 @@ module.exports = {
 	adminOnly: true,
 	usage: 'banword exact <wordToAdd>, banword wildcard <wordToAdd>',
 	execute(message, args) {
-		console.log(bannedWords.wildcard);
 		const {adminLogging} = message.client.config.channelIDs;
 		const typeOfAddition = args[0];
 		const wordToAdd = args[1];
