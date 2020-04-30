@@ -22,7 +22,10 @@ module.exports = (client, message) => {
 				.addField('Message', `${message.content}`);
 
 			client.channels.get(channelIDs.adminLogging).send(exactBannedWordEmbed);
-			message.member.send(`Hey, you can't say that!\nStop it, get some help\nOk srsly pls don't use \`${exactBannedWord}\``);
+			message.reply('Watch your language!')
+				.then(msg => {
+					msg.delete(10000);
+				});
 			break;
 		}
 	}
@@ -42,7 +45,10 @@ module.exports = (client, message) => {
 				.addField('Message', `${message.content}`);
 
 			client.channels.get(channelIDs.adminLogging).send(wildcardBannedWordEmbed);
-			message.member.send(`Hey, you can't say that!\nStop it, get some help\nOk srsly pls don't use \`${wildcardBannedWord}\``);
+			message.reply('Watch your language!')
+				.then(msg => {
+					msg.delete(10000);
+				});
 			break;
 		}
 	}

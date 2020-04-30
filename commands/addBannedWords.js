@@ -20,6 +20,7 @@ module.exports = {
 
 		if (!wordToAdd) {
 			message.client.channels.get(adminLogging).send('Please add a word to ban!');
+			return;
 		}
 
 		switch (typeOfAddition) {

@@ -51,5 +51,9 @@ module.exports = async (client, deletedMessage) => {
 		return;
 	}
 
+	if (deletedMessageContent.endsWith('Watch your language!') && user.bot) {
+		return;
+	}
+
 	client.channels.get(adminLogging).send(deleteEmbed);
 };
