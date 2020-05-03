@@ -27,6 +27,7 @@ module.exports = (client, reaction, user) => {
 
 	// AnonSuggestion reaction listening
 	const {modBot} = client.config.channelIDs;
+	const {suggestions} = client.config.channelIDs;
 
 	if (reaction.message.channel == client.channels.get(modBot)) {
 		if(user != client) {
@@ -37,9 +38,17 @@ module.exports = (client, reaction, user) => {
 				if(reaction.users.size == 2) {
 					// Unreactions break this way of doing it
 					console.log('Count is 2');
+					console.log(suggestions);
+					let content = reaction.message.content;
+
+					content = content + content;
+					// Need to strip the ping from it. The above is there to let me commit
+					client.channels.get(suggestions).send(content).then(async sent => {
+						await sent.react('👍');
+						await sent.react('👎');
+					});
 				}
 				console.log('Is Tick');
-				// Send in suggestion channel
 				return;
 			}
 		}
