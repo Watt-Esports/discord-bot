@@ -31,8 +31,8 @@ module.exports = (client, reaction, user) => {
 	if (reaction.message.channel === client.channels.get(modBot)) {
 		if (user.id !== client.user.id) {
 			if (reaction.emoji.name === '✔') {
-				let {content} = reaction.message;
 				const lastIndex = content.lastIndexOf(' ');
+				let {content} = reaction.message;
 
 				content = content.slice(1, lastIndex - 2);
 				client.channels.get(suggestions).send(content)
