@@ -23,4 +23,25 @@ module.exports = (client, reaction, user) => {
 			}
 		}
 	}
+
+
+	// AnonSuggestion reaction listening
+	const {modBot, suggestions} = client.config.channelIDs;
+
+	if (reaction.message.channel === client.channels.get(modBot)) {
+		if (user.id !== client.user.id) {
+			if (reaction.emoji.name === '✔') {
+				const {content} = reaction.message;
+				const lastIndex = content.lastIndexOf(' ');
+				const suggestion = content.slice(1, lastIndex - 2);
+
+				client.channels.get(suggestions).send(suggestion)
+					.then(async sent => {
+						await sent.react('👍');
+						await sent.react('👎');
+					});
+				return;
+			}
+		}
+	}
 };
