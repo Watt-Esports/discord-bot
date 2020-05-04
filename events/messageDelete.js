@@ -39,6 +39,10 @@ module.exports = async (client, deletedMessage) => {
 	if (deletedMessageContent.startsWith('!member')) {
 		return;
 	}
+	// Prevents double logging of anonymous suggestions
+	if (deletedMessageContent.startsWith('!anonsuggest')) {
+		return;
+	}
 
 	client.channels.get(adminLogging).send(deleteEmbed);
 };
