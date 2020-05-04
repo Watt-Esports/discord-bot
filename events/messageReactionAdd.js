@@ -26,18 +26,16 @@ module.exports = (client, reaction, user) => {
 
 
 	// AnonSuggestion reaction listening
-	const {modBot} = client.config.channelIDs;
-	const {suggestions} = client.config.channelIDs;
+	const {modBot, suggestions} = client.config.channelIDs;
 
-	if (reaction.message.channel == client.channels.get(modBot)) {
+	if (reaction.message.channel === client.channels.get(modBot)) {
 		if(user.id != client.user.id) {
 			if(reaction.emoji.name == '✔') {
-				let content = reaction.message.content;
+				let {content} = reaction.message;
 
-				content = content.split(' ');
-				content.splice(content.length - 1);
-				content = content.join(' ');
-				content = content.slice(1, content.length - 2);
+				const lastIndex = content.lastIndexOf(' ');
+
+				content = content.slice(1, lastIndex - 2);
 				client.channels.get(suggestions).send(content).then(async sent => {
 					await sent.react('👍');
 					await sent.react('👎');
