@@ -29,8 +29,8 @@ module.exports = (client, reaction, user) => {
 	const {modBot, suggestions} = client.config.channelIDs;
 
 	if (reaction.message.channel === client.channels.get(modBot)) {
-		if(user.id != client.user.id) {
-			if(reaction.emoji.name == '✔') {
+		if(user.id !== client.user.id) {
+			if(reaction.emoji.name === '✔') {
 				let {content} = reaction.message;
 
 				const lastIndex = content.lastIndexOf(' ');
