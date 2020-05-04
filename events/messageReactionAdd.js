@@ -32,7 +32,6 @@ module.exports = (client, reaction, user) => {
 		if (user.id !== client.user.id) {
 			if (reaction.emoji.name === '✔') {
 				let {content} = reaction.message;
-
 				const lastIndex = content.lastIndexOf(' ');
 
 				content = content.slice(1, lastIndex - 2);

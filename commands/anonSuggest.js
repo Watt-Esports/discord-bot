@@ -5,7 +5,6 @@ module.exports = {
 	helpMsg: true,
 	execute(message, args) {
 		const {modBot} = message.client.config.channelIDs;
-
 		const suggestion = args.join(' ');
 
 		message.client.channels.get(modBot).send('"' + suggestion + '": ' + message.author)
