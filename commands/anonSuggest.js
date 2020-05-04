@@ -6,15 +6,14 @@ module.exports = {
 	usage: 'anonsuggest',
 	helpMsg: true,
 	execute(message, args) {
-		const {modBot} = message.client.config.channelIDs;
+		const {moderation} = message.client.config.channelIDs;
 		const suggestion = args.join(' ');
-
 		const lastChar = args[0].slice(args[0].length - 1, args[0].length);
 		let number;
 
 		if (!isNaN(lastChar)) {
 			number = args[0];
-		}else {
+		} else {
 			number = args[0].slice(0, args[0].length - 1);
 		}
 
@@ -22,10 +21,11 @@ module.exports = {
 			message.author.send('Please put a number at the start');
 			if (message.channel instanceof GuildChannel) {
 				message.delete();
+				return;
 			}
 		}
 
-		message.client.channels.get(modBot).send('"' + suggestion + '": ' + message.author)
+		message.client.channels.get(moderation).send('"' + suggestion + '": ' + message.author)
 			.then(async sent => {
 				await sent.react('✔');
 				await sent.react('❌');
