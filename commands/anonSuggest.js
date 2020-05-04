@@ -8,9 +8,10 @@ module.exports = {
 
 		const suggestion = args.join(' ');
 
-		message.client.channels.get(modBot).send('"' + suggestion + '": ' + message.author).then(async sent => {
-			await sent.react('✔');
-			await sent.react('❌');
-		});
+		message.client.channels.get(modBot).send('"' + suggestion + '": ' + message.author)
+			.then(async sent => {
+				await sent.react('✔');
+				await sent.react('❌');
+			});
 	}
 };

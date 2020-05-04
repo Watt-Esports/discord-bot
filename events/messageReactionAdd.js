@@ -36,10 +36,11 @@ module.exports = (client, reaction, user) => {
 				const lastIndex = content.lastIndexOf(' ');
 
 				content = content.slice(1, lastIndex - 2);
-				client.channels.get(suggestions).send(content).then(async sent => {
-					await sent.react('👍');
-					await sent.react('👎');
-				});
+				client.channels.get(suggestions).send(content)
+					.then(async sent => {
+						await sent.react('👍');
+						await sent.react('👎');
+					});
 				return;
 			}
 		}
