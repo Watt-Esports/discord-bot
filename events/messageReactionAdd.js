@@ -31,11 +31,11 @@ module.exports = (client, reaction, user) => {
 	if (reaction.message.channel === client.channels.get(modBot)) {
 		if (user.id !== client.user.id) {
 			if (reaction.emoji.name === '✔') {
-				let {content} = reaction.message;
+				const {content} = reaction.message;
 				const lastIndex = content.lastIndexOf(' ');
+				const suggestion = content.slice(1, lastIndex - 2);
 
-				content = content.slice(1, lastIndex - 2);
-				client.channels.get(suggestions).send(content)
+				client.channels.get(suggestions).send(suggestion)
 					.then(async sent => {
 						await sent.react('👍');
 						await sent.react('👎');
