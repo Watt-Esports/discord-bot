@@ -25,7 +25,7 @@ module.exports = {
 			}
 		}
 
-		message.client.channels.get(moderation).send('"' + suggestion + '": ' + message.author)
+		message.client.channels.cache.get(moderation).send(`${suggestion}: ${message.author}`)
 			.then(async sent => {
 				await sent.react('✔');
 				await sent.react('❌');

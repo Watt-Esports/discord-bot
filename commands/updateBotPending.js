@@ -28,14 +28,14 @@ module.exports = {
 		for (const pendingRow of pendingRows) {
 			for (const idRow of idRows) {
 				if (pendingRow.MatriculationNumber === idRow.MatriculationNumber) {
-					const guildObj = message.client.guilds.get(guildID);
+					const guildObj = message.client.guilds.cache.get(guildID);
 
-					guildObj.members.forEach(async (member) => {
+					guildObj.members.cache.forEach(async (member) => {
 						if (member.id === pendingRow.DiscordID) {
 							idRow.DiscordName = getDiscordId(member.user);
 							idRow.Updated = 'Yes';
 							await idRow.save();
-							member.addRole(roleIDs.socMember);
+							member.roles.add(roleIDs.socMember);
 						}
 					});
 					await pendingRow.delete();

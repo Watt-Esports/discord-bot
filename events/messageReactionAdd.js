@@ -4,7 +4,7 @@ const {messageReactionAdd} = require('../utils/commandToggles.json');
 module.exports = (client, reaction, user) => {
 	if (messageReactionAdd) {
 		const {guildID} = client.config;
-		const guildObj = client.guilds.get(guildID);
+		const guildObj = client.guilds.cache.get(guildID);
 
 		for (const messageMapKey of Object.keys(messageMap)) {
 			// Message ID is stored as string since it's too big a number to store
@@ -30,14 +30,14 @@ module.exports = (client, reaction, user) => {
 		// AnonSuggestion reaction listening
 		const {modBot, suggestions} = client.config.channelIDs;
 
-		if (reaction.message.channel === client.channels.get(modBot)) {
+		if (reaction.message.channel === client.channels.cache.get(modBot)) {
 			if (user.id !== client.user.id) {
 				if (reaction.emoji.name === '✔') {
 					const {content} = reaction.message;
 					const lastIndex = content.lastIndexOf(' ');
-					const suggestion = content.slice(1, lastIndex - 2);
+					const suggestion = content.slice(1, lastIndex - 1);
 
-					client.channels.get(suggestions).send(suggestion)
+					client.channels.cache.get(suggestions).send(suggestion)
 						.then(async sent => {
 							await sent.react('👍');
 							await sent.react('👎');

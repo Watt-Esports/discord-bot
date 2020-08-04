@@ -21,10 +21,10 @@ module.exports = (client, message) => {
 				.addField('Location', `${message.channel}`)
 				.addField('Message', `${message.content}`);
 
-			client.channels.get(channelIDs.adminLogging).send(exactBannedWordEmbed);
+			client.channels.cache.get(channelIDs.adminLogging).send(exactBannedWordEmbed);
 			message.reply('Watch your language!')
 				.then(msg => {
-					msg.delete(10000);
+					msg.delete({timeout: 10000});
 				});
 			break;
 		}
@@ -44,10 +44,10 @@ module.exports = (client, message) => {
 				.addField('Location', `${message.channel}`)
 				.addField('Message', `${message.content}`);
 
-			client.channels.get(channelIDs.adminLogging).send(wildcardBannedWordEmbed);
+			client.channels.cache.get(channelIDs.adminLogging).send(wildcardBannedWordEmbed);
 			message.reply('Watch your language!')
 				.then(msg => {
-					msg.delete(10000);
+					msg.delete({timeout: 10000});
 				});
 			break;
 		}
@@ -66,9 +66,9 @@ module.exports = (client, message) => {
 		return;
 	}
 
-	if (command.adminOnly && !message.member.roles.has(roleIDs.admin)) return;
+	if (command.adminOnly && !message.member.roles.cache.has(roleIDs.admin)) return;
 
-	if (command.modOnly && !(message.member.roles.has(roleIDs.admin) || message.member.roles.has(roleIDs.discOfficer) || message.member.roles.has(roleIDs.comLead))) return;
+	if (command.modOnly && !(message.member.roles.cache.has(roleIDs.admin) || message.member.rolescache.has(roleIDs.discOfficer) || message.member.roles.cache.has(roleIDs.comLead))) return;
 
 	try {
 		command.execute(message, args);

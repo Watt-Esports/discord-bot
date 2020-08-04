@@ -9,6 +9,6 @@ module.exports = (client, member) => {
 			.setColor('#0098DB')
 			.setTitle('RIP User left discord');
 
-		client.channels.get(adminLogging).send(leaveEmbed);
+		client.channels.cache.get(adminLogging).send(leaveEmbed);
 	}
 };
