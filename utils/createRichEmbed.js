@@ -1,9 +1,9 @@
 const moment = require('moment');
-const {RichEmbed} = require('discord.js');
+const {MessageEmbed} = require('discord.js');
 const {getDiscordId} = require('./getDiscordId.js');
 
 const createRichEmbed = (user) => {
-	const newEmbed = new RichEmbed()
+	const newEmbed = new MessageEmbed()
 		.setAuthor(getDiscordId(user), user.avatarURL)
 		.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
 

@@ -61,6 +61,6 @@ module.exports = async (client, deletedMessage) => {
 			return;
 		}
 
-		client.channels.get(adminLogging).send(deleteEmbed);
+		client.channels.cache.get(adminLogging).send(deleteEmbed);
 	}
 };

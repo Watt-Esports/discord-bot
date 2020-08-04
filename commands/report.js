@@ -28,6 +28,6 @@ module.exports = {
 
 		message.delete();
 		message.author.send('Your report has been submitted!');
-		message.client.channels.get(channelIDs.adminLogging).send(reportEmbed);
+		message.client.channels.cache.get(channelIDs.adminLogging).send(reportEmbed);
 	}
 };
