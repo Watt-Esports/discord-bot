@@ -7,15 +7,13 @@ module.exports = async (client, deletedMessage) => {
 		const {adminLogging} = client.config.channelIDs;
 		const deletedMessageContent = deletedMessage.content;
 		const user = deletedMessage.author;
-		const deletionLog = await deletedMessage.guild.fetchAuditLogs({
-			limit: 1,
-			type: 'MESSAGE_DELETE'
-		}).then(audit => audit.entries.first());
-		const {executor, target} = deletionLog;
-		let deletedBy = user;
+		const deletionLog = await deletedMessage.guild.fetchAuditLogs({type: 'MESSAGE_DELETE'}).then(audit => audit.entries.first());
+		let deletionUser;
 
-		if (target.id == deletedMessage.author.id) {
-			deletedBy = executor;
+		if (deletionLog.extra.channel.id === deletedMessage.channel.id && (deletionLog.target.id === deletedMessage.author.id) && (deletionLog.createdTimestamp > (Date.now() - 5000)) && deletionLog.extra.count >= 1) {
+			deletionUser = deletionLog.executor;
+		} else {
+			deletionUser = deletedMessage.author;
 		}
 
 		const deleteEmbed = createRichEmbed(user)
@@ -23,7 +21,7 @@ module.exports = async (client, deletedMessage) => {
 			.setColor('#0098DB')
 			.addField('Location', `${deletedMessage.channel}`)
 			.addField('Message', `${deletedMessageContent ? deletedMessageContent : 'Image Message'}`)
-			.addField('Deleted By', `${deletedBy}`);
+			.addField('Deleted By', `${deletionUser}`);
 
 		// Prevents double logging when banned word used
 		for (const word of bannedWords.exact) {
