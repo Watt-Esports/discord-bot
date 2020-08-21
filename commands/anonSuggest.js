@@ -8,7 +8,7 @@ module.exports = {
 	execute(message, args) {
 		const {moderation} = message.client.config.channelIDs;
 		const suggestion = args.join(' ');
-		const lastChar = args[0].slice(args[0].length - 1, args[0].length);
+		const lastChar = args[0][args[0].length - 1];
 		let number;
 
 		if (!isNaN(lastChar)) {
@@ -25,7 +25,7 @@ module.exports = {
 			}
 		}
 
-		message.client.channels.cache.get(moderation).send(`${suggestion}: ${message.author}`)
+		message.client.channels.cache.get(moderation).send(`"${suggestion}" - ${message.author}`)
 			.then(async sent => {
 				await sent.react('✔');
 				await sent.react('❌');
