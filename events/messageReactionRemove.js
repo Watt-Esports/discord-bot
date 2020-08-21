@@ -4,7 +4,7 @@ const {messageReactionRemove} = require('../utils/commandToggles.json');
 module.exports = (client, reaction, user) => {
 	if (messageReactionRemove) {
 		const {guildID} = client.config;
-		const guildObj = client.guilds.get(guildID);
+		const guildObj = client.guilds.cache.get(guildID);
 
 		for (const messageMapKey of Object.keys(messageMap)) {
 			// Message ID is stored as string since it's too big a number to store

@@ -28,14 +28,21 @@ module.exports = (client, reaction, user) => {
 
 
 		// AnonSuggestion reaction listening
-		const {modBot, suggestions} = client.config.channelIDs;
+		const {moderation, suggestions} = client.config.channelIDs;
 
-		if (reaction.message.channel === client.channels.cache.get(modBot)) {
+		if (reaction.message.channel === client.channels.cache.get(moderation)) {
+
 			if (user.id !== client.user.id) {
+
 				if (reaction.emoji.name === '✔') {
+
 					const {content} = reaction.message;
 					const lastIndex = content.lastIndexOf(' ');
-					const suggestion = content.slice(1, lastIndex - 1);
+					const suggestion = content.slice(1, lastIndex - 3);
+
+					console.log(content);
+					console.log(lastIndex);
+					console.log(suggestion);
 
 					client.channels.cache.get(suggestions).send(suggestion)
 						.then(async sent => {
