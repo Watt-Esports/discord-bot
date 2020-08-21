@@ -7,6 +7,7 @@ module.exports = (client, member) => {
 		const {user} = member;
 		const leaveEmbed = createRichEmbed(user)
 			.setColor('#0098DB')
+			.setThumbnail(user.avatarURL())
 			.setTitle('RIP User left discord');
 
 		client.channels.cache.get(adminLogging).send(leaveEmbed);

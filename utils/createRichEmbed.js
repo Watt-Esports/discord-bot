@@ -4,7 +4,7 @@ const {getDiscordId} = require('./getDiscordId.js');
 
 const createRichEmbed = (user) => {
 	const newEmbed = new MessageEmbed()
-		.setAuthor(getDiscordId(user), user.avatarURL)
+		.setAuthor(getDiscordId(user), user.avatarURL())
 		.setFooter(moment().format('h:mm a, Do MMMM YYYY'));
 
 	return newEmbed;

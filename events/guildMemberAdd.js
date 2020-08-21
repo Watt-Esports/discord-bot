@@ -17,6 +17,7 @@ module.exports = (client, member) => {
 		const joinEmbed = createRichEmbed(user)
 			.setColor('#008000')
 			.setTitle('Member Joined!')
+			.setThumbnail(user.avatarURL())
 			.addField('Account Created', `${moment(user.createdTimestamp).format('Do MMMM YYYY')}`);
 
 		client.channels.cache.get(adminLogging).send(joinEmbed);
