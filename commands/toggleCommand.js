@@ -39,7 +39,7 @@ module.exports = {
 				.setDescription(`Command \`${commandName}\` has been switched to \`${toggles[commandName]}\`.`)
 				.setColor('#0098DB');
 
-			message.client.channels.get(adminLogging).send(toggleSuccessEmbed);
+			message.client.channels.cache.get(adminLogging).send(toggleSuccessEmbed);
 			writeFile('utils/commandToggles.json', JSON.stringify(toggles), (err) => {
 				if (err) {
 					throw err;
