@@ -47,37 +47,26 @@ If the event already exists, you can do into the corresponding file and add the 
 
 ```
 {
+	{
 	"token": "Bot Token here",
 	"prefix": "Desired prefix",
 	"inviteLink": "Permanent discord invite link",
 	"channelIDs": {
 		"adminLogging": "Relevant ID",
 		"welcome": "Relevant ID",
-		"getRole": "Relevant ID"
+		"botSpam": "Relevant ID",
+		"moderation": "Relevant ID",
+		"suggestions": "Relevant ID",
 	},
 	"guildID": "Relevant ID",
-	"messageIDs": {
-		"memberToggle": Relevant ID",
-		"lfgToggle": "Relevant ID",
-		"strategyReact": "Relevant ID",
-		"shooterReact": "Relevant ID",
-		"mobaReact": "Relevant ID",
-		"arcadeReact": "Relevant ID",
-		"miscReact": "Relevant ID"
-	},
 	"roleIDs": {
 		"games": "Relevant ID",
-		"hwMember": "Relevant ID6",
-		"member": "Relevant ID",
-		"mod": "Relevant ID",
-		"lfg": "Relevant ID",
-		"noLfg": "Relevant ID",
+		"admin": "Relevant ID",
+		"comLead": "Relevant ID",
+		"discOfficer": "Relevant ID",
 		"misc": "Relevant ID",
-		"socMember": "Relevant ID"
-	},
-	"spreadsheetID": "Relevant ID",
-	"spreadsheetConfig": {
-		Spreadsheet Auth Obj here
+		"socMember": "Relevant ID",
+		"muted": "Relevant ID"
 	}
 }
 ```
