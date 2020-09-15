@@ -7,7 +7,7 @@ module.exports = {
 	execute(message, args) {
 		const {adminLogging} = message.client.config.channelIDs;
 		const roleToFind = args[0];
-		const roleObj = message.guild.roles.find(r => r.name === roleToFind);
+		const roleObj = message.guild.roles.cache.find(r => r.name === roleToFind);
 		let listOfMembers = `Members with the role ${roleToFind} \n`;
 
 		if (!roleObj) {
@@ -15,10 +15,10 @@ module.exports = {
 		}
 
 		for (const member of roleObj.members.values()) {
-			listOfMembers += `${member} \n`;
+			listOfMembers += `-${member}\n`;
 		}
 
-		message.client.channels.get(adminLogging).send(listOfMembers);
+		message.client.channels.cache.get(adminLogging).send(listOfMembers);
 	}
 };
 

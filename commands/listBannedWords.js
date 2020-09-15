@@ -12,6 +12,6 @@ module.exports = {
 		const bannedWordList = `**Exacts**: ${exactBannedWordsString}\n**Wildcards**: ${wildcardBannedWordsString}`;
 		const {adminLogging} = message.client.config.channelIDs;
 
-		message.client.channels.get(adminLogging).send(bannedWordList);
+		message.client.channels.cache.get(adminLogging).send(bannedWordList);
 	}
 };
