@@ -1,5 +1,5 @@
 const pepeDatabase = require('../utils/pepeDatabase.js');
-const {Attachment} = require('discord.js');
+const { MessageAttachment } = require('discord.js');
 
 module.exports = {
 	name: 'pepe',
@@ -9,7 +9,7 @@ module.exports = {
 	execute(message) {
 		const randomPepe = pepeDatabase[Math.floor(Math.random() * pepeDatabase.length)];
 		const pngPepe = randomPepe.slice(0, -1) + '.png';
-		const pepeAttachment = new Attachment(pngPepe);
+		const pepeAttachment = new MessageAttachment(pngPepe);
 
 		message.channel.send(pepeAttachment);
 	}
