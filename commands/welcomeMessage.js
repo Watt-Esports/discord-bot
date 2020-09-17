@@ -3,7 +3,7 @@ const {writeFile} = require('fs');
 
 module.exports = {
 	name: 'welcomemsg',
-	descrption: 'Change the prefix for the bot',
+	descrption: 'Change the welcome message for the bot',
 	guildOnly: true,
 	adminOnly: true,
 	usage: 'welcomemsg <new welcomemsg>',
@@ -12,7 +12,7 @@ module.exports = {
 		const welcomemsg = args.join(' ');
 
 		if (!welcomemsg) {
-			message.client.channels.cache.get(adminLogging).send(`${message.author}, you need to include a prefix!`);
+			message.client.channels.cache.get(adminLogging).send(`${message.author}, you need to include a welcome message!`);
 			return;
 		}
 
