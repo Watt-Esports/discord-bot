@@ -1,13 +1,13 @@
-/* eslint-disable */
 module.exports = {
 	name: 'ping',
 	description: 'Short description of what the command does',
-	guildOnly: true, // Boolean, is not necessary depending on the command
+	guildOnly: true,
 	usage: 'example usage of the command using <> to show variables',
-	execute(message, args) {
+	execute(message) {
 
+		const pingTime = Date.now() - message.createdTimestamp + ' ms';
 
-		// code goes here
+		message.channel.send('pong ' + pingTime);
 
 	}
 };
