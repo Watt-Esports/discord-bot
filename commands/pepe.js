@@ -1,5 +1,5 @@
 const pepeDatabase = require('../utils/pepeDatabase.js');
-const { MessageAttachment } = require('discord.js');
+const {MessageAttachment} = require('discord.js');
 
 module.exports = {
 	name: 'pepe',
