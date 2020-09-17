@@ -12,11 +12,6 @@ module.exports = {
 		const typeOfAddition = args[0];
 		const wordToAdd = args[1];
 
-		if (!typeOfAddition) {
-			message.client.channels.cache.get(adminLogging).send('Please add the type of word you\'re trying to ban (exact or wildcard)');
-			return;
-		}
-
 		if (!wordToAdd) {
 			message.client.channels.cache.get(adminLogging).send('Please add a word to ban!');
 			return;
@@ -43,6 +38,8 @@ module.exports = {
 					message.react('✅');
 				});
 				break;
+			default:
+				message.client.channels.cache.get(adminLogging).send('Please add the type of word you\'re trying to ban (exact or wildcard)');
 		}
 	}
 };

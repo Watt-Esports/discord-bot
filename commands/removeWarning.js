@@ -21,7 +21,7 @@ module.exports = {
 
 		await spreadsheet.loadInfo();
 
-		const warningSheet = spreadsheet.sheetsByIndex[2];
+		const warningSheet = spreadsheet.sheetsByIndex[3];
 		const warningRows = await warningSheet.getRows();
 
 		for (const warningRow of warningRows) {

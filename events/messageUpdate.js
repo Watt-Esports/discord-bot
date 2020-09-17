@@ -15,7 +15,7 @@ module.exports = (client, oldMessage, newMessage) => {
 				.addField('Before', `${oldMessage.content}`)
 				.addField('After', `${newMessage.content}`);
 
-			client.channels.get(adminLogging).send(editEmbed).catch(console.error);
+			client.channels.cache.get(adminLogging).send(editEmbed).catch(console.error);
 		}
 	}
 };

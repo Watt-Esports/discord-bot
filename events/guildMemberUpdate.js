@@ -12,7 +12,7 @@ module.exports = (client, oldMember, newMember) => {
 				.addField('Before', `${oldMember.displayName}`, true)
 				.addField('After', `${newMember.displayName}`, true);
 
-			client.channels.get(channelIDs.adminLogging).send(nicknameEmbed);
+			client.channels.cache.get(channelIDs.adminLogging).send(nicknameEmbed);
 		}
 	}
 };

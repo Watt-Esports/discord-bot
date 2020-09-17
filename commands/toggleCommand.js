@@ -1,5 +1,5 @@
 const toggles = require('../utils/commandToggles.json');
-const {RichEmbed} = require('discord.js');
+const {MessageEmbed} = require('discord.js');
 const {writeFile} = require('fs');
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
 		const {adminLogging} = message.client.config.channelIDs;
 
 		if (args.length === 0) {
-			const toggleCommandEmbed = new RichEmbed()
+			const toggleCommandEmbed = new MessageEmbed()
 				.setColor('#0098DB')
 				.setTitle('Toggleable commands');
 			let descriptionString = '';
@@ -35,7 +35,7 @@ module.exports = {
 
 		if (args.length === 1) {
 			toggles[commandName] = !toggles[commandName];
-			const toggleSuccessEmbed = new RichEmbed()
+			const toggleSuccessEmbed = new MessageEmbed()
 				.setDescription(`Command \`${commandName}\` has been switched to \`${toggles[commandName]}\`.`)
 				.setColor('#0098DB');
 
