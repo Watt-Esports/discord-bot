@@ -1,8 +1,8 @@
 module.exports = {
 	name: 'ping',
-	description: 'Short description of what the command does',
+	description: 'Pings the bot to the client and gives a time in (ms)',
 	guildOnly: true,
-	usage: 'example usage of the command using <> to show variables',
+	usage: 'ping',
 	execute(message) {
 
 		const pingTime = Date.now() - message.createdTimestamp + ' ms';
