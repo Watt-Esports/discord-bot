@@ -12,20 +12,15 @@ module.exports = {
 		const typeOfRemoval = args[0];
 		const wordToRemove = args[1];
 
-		if (typeOfRemoval !== ('exact' || 'wildcard')) {
-			message.client.channels.get(adminLogging).send('Please add the type of word you\'re trying to remove (exact or wildcard)');
-			return;
-		}
-
 		if (!wordToRemove) {
-			message.client.channels.get(adminLogging).send('Please add a word to remove');
+			message.client.channels.cache.get(adminLogging).send('Please add a word to remove');
 			return;
 		}
 
 		switch (typeOfRemoval) {
 			case 'exact':
 				if (!bannedWordList.exact.includes(wordToRemove.toString())) {
-					message.client.channels.get(adminLogging).send('Word does not exist in banned list!');
+					message.client.channels.cache.get(adminLogging).send('Word does not exist in banned list!');
 					return;
 				}
 
@@ -38,7 +33,7 @@ module.exports = {
 				break;
 			case 'wildcard':
 				if (!bannedWordList.exact.includes(wordToRemove.toString())) {
-					message.client.channels.get(adminLogging).send('Word does not exist in banned list!');
+					message.client.channels.cache.get(adminLogging).send('Word does not exist in banned list!');
 					return;
 				}
 
@@ -48,6 +43,9 @@ module.exports = {
 						break;
 					}
 				}
+				break;
+			default:
+				message.client.channels.cache.get(adminLogging).send('Please add the type of word you\'re trying to remove from the list (exact or wildcard)!');
 				break;
 		}
 

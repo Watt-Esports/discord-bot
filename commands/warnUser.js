@@ -36,7 +36,7 @@ module.exports = {
 
 		await spreadsheet.loadInfo();
 
-		const warningSheet = spreadsheet.sheetsByIndex[2];
+		const warningSheet = spreadsheet.sheetsByIndex[3];
 		const warningRows = await warningSheet.getRows();
 
 		for (const warningRow of warningRows) {
@@ -72,6 +72,6 @@ module.exports = {
 			.addField('Reason', `${reason}`, true);
 
 		message.react('✅');
-		message.client.channels.get(channelIDs.adminLogging).send(warnEmbed);
+		message.client.channels.cache.get(channelIDs.adminLogging).send(warnEmbed);
 	}
 };

@@ -40,7 +40,7 @@ module.exports = {
 			}
 
 			if (!hwIDInSheet) {
-				const pendingSheet = spreadsheet.sheetsByIndex[1];
+				const pendingSheet = spreadsheet.sheetsByIndex[2];
 
 				await pendingSheet.addRow({
 					'MatriculationNumber': hwID,

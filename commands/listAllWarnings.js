@@ -22,7 +22,7 @@ module.exports = {
 
 		await spreadsheet.loadInfo();
 
-		const warningSheet = spreadsheet.sheetsByIndex[2];
+		const warningSheet = spreadsheet.sheetsByIndex[3];
 		const warningRows = await warningSheet.getRows();
 
 		for (const warningRow of warningRows) {
@@ -34,11 +34,11 @@ module.exports = {
 		});
 
 		for (const entry of Object.entries(counts)) {
-			const member = message.guild.members.get(entry[0]);
+			const member = message.guild.members.cache.get(entry[0]);
 
 			logMessage += `${member} has ${entry[1]} warning(s)\n`;
 		}
 
-		message.client.channels.get(channelIDs.adminLogging).send(logMessage);
+		message.client.channels.cache.get(channelIDs.adminLogging).send(logMessage);
 	}
 };

@@ -32,7 +32,7 @@ module.exports = (client, message) => {
 
 	for (const wildcardBannedWord of bannedWords.wildcard) {
 		if (message.content.includes(wildcardBannedWord) && !message.author.bot && message.channel.type === 'text') {
-			if (message.content.startsWith('!unbanword') && message.member.roles.has(roleIDs.admin)) {
+			if (message.content.startsWith('!unbanword') && message.member.roles.cache.has(roleIDs.admin)) {
 				break;
 			}
 
@@ -68,7 +68,7 @@ module.exports = (client, message) => {
 
 	if (command.adminOnly && !message.member.roles.cache.has(roleIDs.admin)) return;
 
-	if (command.modOnly && !(message.member.roles.cache.has(roleIDs.admin) || message.member.rolescache.has(roleIDs.discOfficer) || message.member.roles.cache.has(roleIDs.comLead))) return;
+	if (command.modOnly && !(message.member.roles.cache.has(roleIDs.admin) || message.member.roles.cache.has(roleIDs.discOfficer) || message.member.roles.cache.has(roleIDs.comLead))) return;
 
 	try {
 		command.execute(message, args);

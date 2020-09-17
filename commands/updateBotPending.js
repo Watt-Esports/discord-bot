@@ -21,7 +21,7 @@ module.exports = {
 		await spreadsheet.loadInfo();
 
 		const idSheet = spreadsheet.sheetsByIndex[0];
-		const pendingSheet = spreadsheet.sheetsByIndex[1];
+		const pendingSheet = spreadsheet.sheetsByIndex[2];
 		const idRows = await idSheet.getRows();
 		const pendingRows = await pendingSheet.getRows();
 

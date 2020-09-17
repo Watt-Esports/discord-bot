@@ -28,16 +28,16 @@ module.exports = {
 		await spreadsheet.loadInfo();
 
 		const listWarningEmbed = createRichEmbed(user);
-		const warningSheet = spreadsheet.sheetsByIndex[2];
+		const warningSheet = spreadsheet.sheetsByIndex[3];
 		const warningRows = await warningSheet.getRows();
 
 		for (const warningRow of warningRows) {
 			if (warningRow.MemberID === user.id) {
 				warningsFound = true;
 				let adminUser;
-				const guildObj = message.client.guilds.get(guildID);
+				const guildObj = message.client.guilds.cache.get(guildID);
 
-				guildObj.members.forEach((member) => {
+				guildObj.members.cache.forEach((member) => {
 					if (member.id === warningRow.ModID) {
 						adminUser = member;
 					}
@@ -53,12 +53,12 @@ module.exports = {
 			listWarningEmbed
 				.setTitle('List of Warnings')
 				.setColor('#FF0000');
-			message.client.channels.get(channelIDs.adminLogging).send(listWarningEmbed);
+			message.client.channels.cache.get(channelIDs.adminLogging).send(listWarningEmbed);
 		} else {
 			listWarningEmbed
 				.setTitle('No Warnings. This is a good boio')
 				.setColor('#008000');
-			message.client.channels.get(channelIDs.adminLogging).send(listWarningEmbed);
+			message.client.channels.cache.get(channelIDs.adminLogging).send(listWarningEmbed);
 		}
 	}
 };
