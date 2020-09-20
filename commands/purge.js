@@ -13,20 +13,19 @@ module.exports = {
 
 		if (isNaN(deleteNum)) {
 			message.channel.send('Please enter a valid number');
-		} else if (deleteNum <= 0) {
-			message.channel.send('Please enter a valid number');
-
-		} else {
-			message.channel.bulkDelete(deleteNum + 1);
-
-			const purgeEmbed = createRichEmbed(message.author)
-				.setTitle('Purged Messages')
-				.setColor('#FF0000')
-				.addField('Purged by', `${message.author}`)
-				.addField('Number of messages purged', `${deleteNum}`);
-
-			message.client.channels.cache.get(channelIDs.adminLogging).send(purgeEmbed);
+			return;
 		}
-	}
+		if (deleteNum <= 0) {
+			message.channel.send('Please enter a valid number');
+			return;
+		}
+		message.channel.bulkDelete(deleteNum + 1);
+		const purgeEmbed = createRichEmbed(message.author)
+			.setTitle('Messages purged')
+			.setColor('#FF0000')
+			.addField('Location', `${message.channel}`, true)
+			.addField('Number of messages purged', `${deleteNum}`, true);
 
+		message.client.channels.cache.get(channelIDs.adminLogging).send(purgeEmbed);
+	}
 };
