@@ -1,12 +1,12 @@
 {
-	"guildMemberAdd": true,
-	"guildMemberRemove": true,
-	"guildMemberUpdate": true,
-	"messageDelete": true,
-	"messageReactionAdd": true,
-	"messageReactionRemove": true,
-	"messageUpdate": true,
-	"raw": true,
-	"voiceStateUpdate": true,
-	"toggleVCSpam": true
+	"guildMemberAdd": false,
+	"guildMemberRemove": false,
+	"guildMemberUpdate": false,
+	"messageDelete": false,
+	"messageReactionAdd": false,
+	"messageReactionRemove": false,
+	"messageUpdate": false,
+	"raw": false,
+	"voiceStateUpdate": false,
+	"toggleVCSpam": false
 }
