@@ -7,6 +7,13 @@ module.exports = {
 		const command = args.shift();
 		const {guildID, roleIDs} = message.client.config;
 		const guildObj = message.client.guilds.cache.get(guildID);
+		const associateMemberIDs = [
+			150630241189101568,
+			117585790292197382,
+			496670898267619359,
+			229611611780939776,
+			205323535667822592
+		];
 
 		switch (command) {
 			case 'bind':
@@ -166,6 +173,11 @@ module.exports = {
 						break;
 					}
 
+					if (associateMemberIDs.includes(memberVoting.id)) {
+						memberVoting.send('Sorry, you are an associate member and cannot vote.');
+						break;
+					}
+
 					if (memberVoted) {
 						memberVoting.send('You\'ve already cast your vote!');
 						break;
@@ -214,6 +226,7 @@ module.exports = {
 						memberVoting.send(`You have voted for ${candidate}. If this is incorrect, please reply with !vote cancel, and revote!`);
 						message.client.voteConfig.votes.push({voter: message.author.id, vote: voteToCast});
 						message.client.voteConfig.voteCounts[voteToCast - 1] += 1;
+						break;
 					}
 
 					if (message.client.voteConfig.type === 'closed') {
@@ -321,6 +334,11 @@ module.exports = {
 									break;
 								}
 
+								if (associateMemberIDs.includes(proxyVoter.id)) {
+									message.channel.send('This person is an associate member and not eligible to vote');
+									break;
+								}
+
 								if (isNaN(proxyVote)) {
 									message.channel.send('Please use a number to vote!');
 									break;
@@ -334,11 +352,11 @@ module.exports = {
 								const candidateId = message.client.voteConfig.peopleStandingIds[proxyVote - 1];
 								let candidate = guildObj.members.cache.get(candidateId);
 
-								if (voteToCast === message.client.voteConfig.peopleStandingIds.length + 1) {
+								if (proxyVote === message.client.voteConfig.peopleStandingIds.length + 1) {
 									candidate = 're-opening nominations';
 								}
 
-								if (voteToCast === message.client.voteConfig.peopleStandingIds.length + 2) {
+								if (proxyVote === message.client.voteConfig.peopleStandingIds.length + 2) {
 									candidate = 'abstaining';
 								}
 
@@ -375,6 +393,11 @@ module.exports = {
 
 								if (!proxyVoterGuild.roles.cache.has(roleIDs.socMember)) {
 									message.channel.send('This person is not a society member, and is ineligible to vote. If you think this incorrect, please get in touch with a committee member');
+									break;
+								}
+
+								if (associateMemberIDs.includes(proxyVoter.id)) {
+									message.channel.send('This person is an assocaite member and is ineligible to vote');
 									break;
 								}
 
